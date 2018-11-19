@@ -56,7 +56,7 @@ namespace SpicyInvaders.game
             for (int count = 0; count < 6; count++)
             {
                 // pause the thread
-                Thread.Sleep(100);
+                Thread.Sleep(50);
 
                 if (count % 2 == 0)
                     Console.ForegroundColor = ConsoleColor.Black;

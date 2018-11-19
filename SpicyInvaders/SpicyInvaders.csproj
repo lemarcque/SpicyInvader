@@ -42,17 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game.cs" />
+    <Compile Include="game\Game.cs" />
     <Compile Include="game\character\Crab.cs" />
     <Compile Include="game\character\Octopus.cs" />
     <Compile Include="game\character\Squid.cs" />
     <Compile Include="game\Direction.cs" />
     <Compile Include="game\character\Character.cs" />
     <Compile Include="game\character\Invader.cs" />
-    <Compile Include="game\Menu.cs" />
+    <Compile Include="interface\Menu.cs" />
     <Compile Include="game\Missile.cs" />
     <Compile Include="game\character\Ship.cs" />
-    <Compile Include="Interface.cs" />
+    <Compile Include="interface\Interface.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

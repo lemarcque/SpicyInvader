@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Author : Henoc Sese
+// Description : Space Invaders game
+// Date : 19.11.2018
+// Locality : Lausanne 
+
+using System;
 
 namespace SpicyInvaders
 {
     class Ship : Character
     {
-        private bool isShooting;            // determine if the missile moving
-        Missile missile;                    // The ship has only one missile
 
-        public Ship()
+
+        public Ship():base()
         {
             missile = new Missile(this);
             this.setAsciiCharacter("▲");
@@ -20,35 +19,9 @@ namespace SpicyInvaders
 
         public Ship(String name) :base(name)
         {
-            missile = new Missile(this);
+            
         }
 
-        /// <summary>
-        /// Shoot action
-        /// </summary>
-        /// <param name="state"></param>
-        public void shoot(bool state)
-        {
-            isShooting = state;
-
-            missile.isMoving = state;
-            missile.setX(posX);
-            missile.setY(posY - 2);
-        }
-
-        public bool getIsShooting()
-        {
-            return isShooting;
-        }
-
-        /// <summary>
-        /// Return the missile object
-        /// </summary>
-        /// <returns></returns>
-        public Missile GetMissile()
-        {
-            return missile;
-        }
 
         /// <summary>
         /// Todo Overriding ...

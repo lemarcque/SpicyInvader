@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Author : Henoc Sese
+// Description : Character of the game
+// Date : 12.11.2018
+
+
+using System;
+using System.Diagnostics;
 
 namespace SpicyInvaders
 {
@@ -10,13 +16,18 @@ namespace SpicyInvaders
 
         protected int posX;       // horizontal position of the character
         protected int posY;       // vertical position of the character
-        protected int speedX;
-        protected int speedY;
-        protected int size;     
+        protected int speedX;     // The horizontal speed of the character
+        protected int speedY;     // The vertical speed of the character
+        protected int size;       
         public bool isAliveState;
-        private String name;    // name of the character
+        private string name;    // name of the character
 
-        private String character = "█";
+        // Propreties of a shooter
+        private bool isShooting;            // determine if the missile moving
+        protected Missile missile;                    // The ship has only one missile
+
+
+        private string character = "█";
         private ConsoleColor color;
 
         private Environment environment;    // Environment in which the object is
@@ -27,12 +38,41 @@ namespace SpicyInvaders
             // initialization
             isAliveState = true;
             speedX = 1;
-            speedY = 0;
+            speedY = 1;
+            missile = new Missile(this);
         }
 
         public Character(String name) :base()
         {
             this.name = name;
+        }
+
+
+        /// <summary>
+        /// Shoot action
+        /// </summary>
+        /// <param name="state"></param>
+        public void shoot(bool state)
+        {
+            isShooting = state;
+
+            missile.isMoving = state;
+            missile.setX(posX);
+            missile.setY(posY - 2);
+        }
+
+        public bool getIsShooting()
+        {
+            return isShooting;
+        }
+
+        /// <summary>
+        /// Return the missile object
+        /// </summary>
+        /// <returns></returns>
+        public Missile GetMissile()
+        {
+            return missile;
         }
 
         /// <summary>
@@ -110,22 +150,78 @@ namespace SpicyInvaders
             switch(direction)
             {
                 case Direction.Left:
-                    if(posX - speedX >= 0)
+                {
+                    if (posX - speedX >= 0)
                         this.posX -= speedX;
                     break;
+                }
+                
                 case Direction.Right:
+                {
                     if (posX + speedX < environment.getWidth())
                         this.posX += speedX;
                     break;
+                }
+                   
                 case Direction.Up:
+                {
                     if (posY - speedY > 0)
                         this.posY += speedY;
                     break;
+                }
+                    
                 case Direction.Down:
-                    if (posY + speedY < environment.getWidth())
-                        this.posY += speedY;
-                    break;
+                    {
+                        if (posY + speedY < environment.getHeight())
+                            this.posY += speedY;
+                        break;
+                    }
             }
+        }
+
+        public bool OnCollision(Character p2)
+        {
+            return getX() == p2.getX() && getY() == p2.getY();
+        }
+
+        public bool onHitboxCollision(Character p2)
+        {
+            const short HITBOX_WIDTH = 1;         // zone of collision
+
+            // collision de haut en bas
+            if ((this.getX() == p2.getX()) && (this.getY() - p2.getY() == HITBOX_WIDTH))
+            {
+                Debug.WriteLine("1");
+                return true;
+            }
+
+            // collision de bas en haut
+            if ((this.getX() == p2.getX()) && (p2.getY() - this.getY() == HITBOX_WIDTH))
+            {
+                Debug.WriteLine("2");
+                return true;
+            }
+
+            // collision de gauche à droite
+            if ((this.getX() - p2.getX()) == HITBOX_WIDTH && (p2.getY() == this.getY()))
+            {
+                Debug.WriteLine("3");
+                return true;
+            }
+
+            // collision de droite à gauche
+            if ((p2.getX() - this.getX()) == HITBOX_WIDTH && (p2.getY() == this.getY()))
+            {
+                Debug.WriteLine("4");
+                return true;
+            }
+                
+
+            // collision à l'intérieur
+            if (this.getX() == p2.getX() && this.getY() == p2.getY())
+                return true;
+
+            return false;
         }
 
 

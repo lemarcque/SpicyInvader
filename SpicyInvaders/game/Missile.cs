@@ -55,7 +55,6 @@ namespace SpicyInvaders
         public void setX(int posX)
         {
             this.posX = posX;
-            Debug.WriteLine(posX);
         }
 
         public void setY(int posY)

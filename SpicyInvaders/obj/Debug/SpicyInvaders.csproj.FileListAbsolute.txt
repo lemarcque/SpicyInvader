@@ -26,3 +26,10 @@ F:\Course\CS\P_x\032-P_Dev\src\SpicyInvaders\SpicyInvaders\obj\Debug\SpicyInvade
 F:\Course\CS\P_x\032-P_Dev\src\SpicyInvaders\SpicyInvaders\obj\Debug\SpicyInvaders.csproj.CoreCompileInputs.cache
 F:\Course\CS\P_x\032-P_Dev\src\SpicyInvaders\SpicyInvaders\obj\Debug\SpicyInvaders.exe
 F:\Course\CS\P_x\032-P_Dev\src\SpicyInvaders\SpicyInvaders\obj\Debug\SpicyInvaders.pdb
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\bin\Debug\SpicyInvaders.exe.config
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\bin\Debug\SpicyInvaders.exe
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\bin\Debug\SpicyInvaders.pdb
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\obj\Debug\SpicyInvaders.csprojAssemblyReference.cache
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\obj\Debug\SpicyInvaders.csproj.CoreCompileInputs.cache
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\obj\Debug\SpicyInvaders.exe
+F:\Course\CS\P_x\032-P_Dev\src\SpicyInvader\SpicyInvaders\obj\Debug\SpicyInvaders.pdb
