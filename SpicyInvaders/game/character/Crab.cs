@@ -14,5 +14,16 @@ namespace SpicyInvaders.game.character
             setColor(ConsoleColor.Yellow);
             scoreGain = 20;
         }
+
+        /// <summary>
+        /// Shoot action
+        /// Override the method frim the superclass
+        /// </summary>
+        /// <param name="state"></param>
+        public virtual void shoot(bool state)
+        {
+            base.shoot(state);
+            missile.setY(getY() + 2);
+        }
     }
 }

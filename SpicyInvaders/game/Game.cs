@@ -22,10 +22,17 @@ namespace SpicyInvaders
         private int score;                          // The current score of the player
         private int lives;                          // The current number of lives of the player
 
+        // Relative at the ennemies
+        private int nRow;
+        private int nColumn;
+        private int currentCloserRow;
+
+
         public static int MAX_INVADER_MOVE;     // The maximum number of times invaders can move, is the screenwidth - width of invaders'bloc size
         public const short LIVES = 3;               // The maximum lives of the player
+        private const int INTERVAL_INVADER_MISSILE_SHOOT = 1000; // default : 3000
+        Timer timer;
 
-        private const int INTERVAL_INVADER_MISSILE_SHOOT = 3000;
 
         /// <summary>
         /// Constructor
@@ -44,7 +51,7 @@ namespace SpicyInvaders
             createEnnemies();
 
             // creation of a timer
-            Timer timer = new Timer(INTERVAL_INVADER_MISSILE_SHOOT);
+            timer = new Timer(INTERVAL_INVADER_MISSILE_SHOOT);
             timer.Elapsed += new ElapsedEventHandler(onGenerateMissile);
             timer.Start();
         }
@@ -56,15 +63,23 @@ namespace SpicyInvaders
         private void onGenerateMissile(object source, ElapsedEventArgs e)
         {
             const int SHOOTING_RANGE = 0;                   // The field of view of the invader to make a shoot
-            foreach(Invader invader in ennemies)
+
+            List<Invader> invaders = getInvadersAtRow(getCloserInvadersRow());
+
+            foreach(Invader invader in invaders)
             {
-                if(invader.getX() >=  ship.getX() - SHOOTING_RANGE && invader.getX() <= ship.getX() + SHOOTING_RANGE)
+                if(invader.IsAlive)
                 {
-                    invader.shoot(true);
-                    currentMissiles.Add(invader.GetMissile());
+                    if (invader.getX() >= ship.getX() - SHOOTING_RANGE && invader.getX() <= ship.getX() + SHOOTING_RANGE)
+                    {
+                        invader.shoot(true);
+                        currentMissiles.Add(invader.GetMissile());
+                    }
                 }
             }
         }
+
+
 
         /// <summary>
         /// Creation of ennemies that will be displayed in a range of n ennemies
@@ -72,26 +87,70 @@ namespace SpicyInvaders
         public void createEnnemies()
         {
             ennemies = new List<Invader>();
+            
+            this.nRow = 5;                                                  // The number of row of invaders       (default : 5)                     
+            this.nColumn = 10;                                              // The number of column of invaders    (default : 10)
+            currentCloserRow = nRow;                                        // The row which ship are closer
 
-            const short SPACE_BETWEEN_INVADER = 3;                // the space that is between the ennemies displayed
-            const short nRow = 5;                                 // The number of row of invaders       (default : 5)                          
-            const short nColumn = 10;                             // The number of column of invaders    (default : 10)
+            const short SPACE_BETWEEN_INVADER = 3;                          // the space that is between the ennemies displayed
             MAX_INVADER_MOVE = width - (nColumn * SPACE_BETWEEN_INVADER);
 
             int basePositionX = 1;//((width / 2) - (nRow + SPACE_BETWEEN_INVADER)); // position  horizontale de base du bloc d'invaders default : 1 or 2
             int basePositionY = 8;                                                  // position verticale de base du bloc d'invaders    default : 8
 
-            for (int x = 0; x < nColumn; x++)
+            for (int x = 0; x < nRow; x++)
             {
-                for (int y = 0; y < nRow; y++)
+                for (int y = 0; y < nColumn; y++)
                 {
                     Crab crab = new Crab();
-                    crab.setX(basePositionX + (SPACE_BETWEEN_INVADER * x));
-                    crab.setY(basePositionY + (SPACE_BETWEEN_INVADER * y));
+                    crab.setX(basePositionX + (SPACE_BETWEEN_INVADER * y));
+                    crab.setY(basePositionY + (SPACE_BETWEEN_INVADER * x));
+                    crab.Row = x + 1;
+                    crab.Column = y + 1;
                     crab.setEnvironment(this);  // temp
                     ennemies.Add(crab);
                 }
             }
+        }
+
+        public int getCloserInvadersRow()
+        {
+            for (int i = 0; i < nRow; i++)
+            {
+                List<Invader> invaders = getInvadersAtRow(nRow);
+
+                foreach (Invader invader in invaders)
+                {
+                    if (invader.IsAlive)
+                    {
+                        currentCloserRow = nRow;
+                        return currentCloserRow;
+                    }
+                }
+            }
+
+            return currentCloserRow;
+        }
+
+        /// <summary>
+        /// Return a list of invaders from a specific row
+        /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        private List<Invader> getInvadersAtRow(int rowIndex)
+        {
+            List<Invader> invaders = new List<Invader>();
+
+            foreach (Invader invader in ennemies)
+            {
+                if (invader.Row == rowIndex)
+                {
+                    invaders.Add(invader);
+                }
+            }
+
+
+            return invaders;
         }
 
         /// <summary>
@@ -130,6 +189,18 @@ namespace SpicyInvaders
         {
             ship.shoot(false);
             currentMissiles.Remove(ship.GetMissile());
+        }
+
+        public void dishoot(Missile missile)
+        {
+            foreach(Invader invader in ennemies)
+            {
+                if(invader.GetMissile() == missile)
+                {
+                    invader.shoot(false);
+                    currentMissiles.Remove(missile);
+                }
+            }
         }
 
         public int getScore()

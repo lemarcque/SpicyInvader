@@ -52,7 +52,7 @@ namespace SpicyInvaders
         /// Shoot action
         /// </summary>
         /// <param name="state"></param>
-        public void shoot(bool state)
+        public virtual void shoot(bool state)
         {
             isShooting = state;
 
@@ -139,6 +139,9 @@ namespace SpicyInvaders
         {
             this.isAliveState = isAlive;
         }
+
+        public bool IsAlive { get => isAliveState; set => isAliveState = value; }
+
 
         public bool isAlive()
         {

@@ -10,32 +10,16 @@ namespace SpicyInvaders.game
 {
     abstract class Invader : Character
     {
-        private int row;
-        private int column;
+        protected int row;
+        protected int column;
         protected int scoreGain; // The points gain by kill
         private bool isKilled;      // state of the invader, wether true or false
 
+        // Getter and Setters
         public bool IsKilled { get => isKilled; set => isKilled = value; }
+        public int Column { get => column; set => column = value; }
+        public int Row { get => row; set => row = value; }
 
-        void setRow()
-        {
-
-        }
-
-        public void setColumn()
-        {
-
-        }
-
-        public int getRow()
-        {
-            return row;
-        }
-
-        public int getColum()
-        {
-            return column;
-        }
 
         /// <summary>
         /// Return the 

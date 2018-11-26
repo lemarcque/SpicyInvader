@@ -124,7 +124,6 @@ namespace SpicyInvaders
                 game.getShip().move(direction);
             }
 
-
             // Drawing
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.SetCursorPosition(game.getShip().getX(), game.getShip().getY());
@@ -139,12 +138,14 @@ namespace SpicyInvaders
         private void loopAnimation()
         {
 
+            // Frame
             int tics = 0;
             const int fps = 10;
             const int FRAME_REFRESH = 5;
 
-            // timer for ennemies moving (refresh of their position)
-            short speedInvaders = 10;
+            
+            const short INVADERS_SPEED = 20;         // timer for ennemies moving (refresh of their position)
+            const short MISSILE_INVADERS_SPEED = 10;
 
             // Displaying (for first time) the ennemies on the "scene"
             foreach (Invader invader in game.getCurrentEnnemies())
@@ -199,22 +200,22 @@ namespace SpicyInvaders
 
                     // Handling missile 
                     // Ship missile management
-                    if (game.getCurrentMissiles()[i].getOwner() is Ship && game.getCurrentMissiles()[i].isMoving)
+                    if (missile.getOwner() is Ship && missile.isMoving)
                     {
 
 
                         // Check if the missile goes outside the limits of the console size
-                        if (game.getCurrentMissiles()[i].getY() > LIMIT_MISSILE_DESTROY)
+                        if (missile.getY() > LIMIT_MISSILE_DESTROY)
                         {
                             // Réduction de la vitesse du missile
                             if(tics % FRAME_REFRESH == 0)
                             {
                                 //Erasing the last missile
-                                eraseChar(game.getCurrentMissiles()[i].getX(), game.getCurrentMissiles()[i].getY() + Missile.SPEED);
+                                eraseChar(missile.getX(), missile.getY() + Missile.SPEED);
                                     
                                 // Afficher la nouvelle position du missile
-                                Console.SetCursorPosition(game.getCurrentMissiles()[i].getX(), game.getCurrentMissiles()[i].getY());
-                                game.getCurrentMissiles()[i].setY(game.getCurrentMissiles()[i].getY() - Missile.SPEED);
+                                Console.SetCursorPosition(missile.getX(), missile.getY());
+                                missile.setY(missile.getY() - Missile.SPEED);
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write("*");
 
@@ -250,7 +251,24 @@ namespace SpicyInvaders
                     //  Management of the missiles of the "invaders"
                     else
                     {
-                        Debug.WriteLine("Owner : " + missile.getOwner());
+                        if(tics % MISSILE_INVADERS_SPEED == 0)
+                        {
+                            // Erase the last char
+                            this.eraseChar(missile.getX(), missile.getY());
+
+                            // Display a missile at a specific position
+                            missile.setY(missile.getY() + Missile.SPEED);
+                            Console.SetCursorPosition(missile.getX(), missile.getY());
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write("*");
+
+                            // Handle auto-destruction of the missile
+                            if (missile.getY() == limitLinePosY)
+                            {
+                                game.dishoot(missile);
+                                eraseChar(missile.getX(), limitLinePosY);
+                            }
+                        }
                     }
 
                 }
@@ -261,7 +279,7 @@ namespace SpicyInvaders
                 // Déplacement des ennemies
                 // Change the position of invaders
                 
-                if(tics % speedInvaders == 0)
+                if(tics % INVADERS_SPEED == 0)
                 {
                     InvaderIsMoving = true;
                     Direction sens = currentMoveSens;                     // sens of the moving (left or right)
