@@ -50,10 +50,15 @@
     <Compile Include="models\Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="views\AboutView.cs" />
     <Compile Include="views\Character.cs" />
+    <Compile Include="views\configs\LifecycleState.cs" />
+    <Compile Include="views\HighscoresView.cs" />
     <Compile Include="views\MenuView.cs" />
     <Compile Include="views\configs\Screen.cs" />
     <Compile Include="views\configs\ScreenInfo.cs" />
+    <Compile Include="views\OptionsView.cs" />
+    <Compile Include="views\PlayView.cs" />
     <Compile Include="views\View.cs" />
   </ItemGroup>
   <ItemGroup>

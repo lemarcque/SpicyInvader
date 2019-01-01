@@ -14,25 +14,25 @@ namespace SpicyInvader.views
     {
         public MenuPresenter Presenter { get; set; }   // DIP - Reference of the Presenter
 
-        // Variable
-
-        private const int BASE_POSY_CURSOR = 20;
-
-        private int xPosSelection;
-        private int yPosSelection;
+        // Variable (proper to the view)
+        private int xPosSelection;            // Y position of the Console cursor
+        private int yPosSelection;            // X position of the Console cursor
         private int currentMenuCursorPos;     // Current position of the cursor on the menu
         private int maxMenuLength;        // Number of items in the menu
+        private Screen[] screenName;                    // Name's list of screens that can be displayed
 
-        Screen[] screenName;                    // Name's list of screens that can be displayed
+        private const int BASE_POSY_CURSOR = 20;
 
         public MenuView()
         {
 
         }
 
-        public override void Display(ScreenInfo screenInfo)
+
+
+        public override void onCreate(ScreenInfo screenInfo)
         {
-            base.Display(screenInfo);
+            base.onCreate(screenInfo);
 
             // Show the header
             foreach(string line in Presenter.GetHeader())
@@ -48,7 +48,6 @@ namespace SpicyInvader.views
             yPosSelection = BASE_POSY_CURSOR;
             xPosSelection = (width / 2) - (maxLineSize / 2);
             
-
             screenName = new Screen[]{ Screen.PLAY, Screen.OPTIONS, Screen.HIGHSCORES, Screen.ABOUT };
             maxMenuLength = screenName.Length;
             currentMenuCursorPos = 0;
@@ -60,60 +59,25 @@ namespace SpicyInvader.views
                 yPosSelection += 2;
             }
 
-            displayCursor(0, currentMenuCursorPos);
+            
 
             // Show the footer
 
-            // Keyboard event management
-            keyboardHandler();
+            
         }
 
         /// <summary>
-        /// Handle keyboard press event safely
+        /// The view is displayed on the screen and ready to be manipulated.
         /// </summary>
-        private void keyboardHandler()
+        public override void onResume()
         {
-            // Create a new Thread
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    if (Console.KeyAvailable)
-                    {
-                        ConsoleKeyInfo key = Console.ReadKey(true);
+            base.onResume();
 
-                        switch (key.Key)
-                        {
-                            case ConsoleKey.UpArrow:
-                                if(currentMenuCursorPos - 1 >= 0)
-                                {
-                                    currentMenuCursorPos--;
-                                }
-                                displayCursor(currentMenuCursorPos + 1, currentMenuCursorPos);
-                                break;
+            // Change the position of the menu's cursor
+            displayCursor(0, currentMenuCursorPos);
 
-                            case ConsoleKey.DownArrow:
-                                if(currentMenuCursorPos + 1 < maxMenuLength)
-                                {
-                                    currentMenuCursorPos++;
-                                }
-                                displayCursor(currentMenuCursorPos - 1, currentMenuCursorPos);
-                                break;
-
-                            case ConsoleKey.Enter:
-                                Program.Finish(this);
-                                Debug.WriteLine("enter : Navigate to Screen X ...");
-                                break;
-
-                            default:
-                                Debug.WriteLine("Not handled");
-                                break;
-                        }
-                    }
-
-                }
-            }).Start();
-            
+            // Keyboard event management
+            keyboardHandler();
         }
 
         /// <summary>
@@ -139,10 +103,82 @@ namespace SpicyInvader.views
             Console.SetCursorPosition(xPosSelection, currentConsoleCursorPos);
         }
 
-        public override void Exit()
+
+        /// <summary>
+        /// Handle keyboard press event safely
+        /// </summary>
+        private void keyboardHandler()
+        {
+            // Create a new Thread
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo key = Console.ReadKey(true);
+
+                        switch (key.Key)
+                        {
+                            case ConsoleKey.UpArrow:
+                                if (currentMenuCursorPos - 1 >= 0)
+                                {
+                                    currentMenuCursorPos--;
+                                }
+                                displayCursor(currentMenuCursorPos + 1, currentMenuCursorPos);
+                                break;
+
+                            case ConsoleKey.DownArrow:
+                                if (currentMenuCursorPos + 1 < maxMenuLength)
+                                {
+                                    currentMenuCursorPos++;
+                                }
+                                displayCursor(currentMenuCursorPos - 1, currentMenuCursorPos);
+                                break;
+
+                            case ConsoleKey.Enter:
+                                Program.Navigate(getViewFrom(currentMenuCursorPos));
+                                break;
+
+                            default:
+                                // Key press event not handleds
+                                break;
+                        }
+                    }
+
+                }
+            }).Start();
+
+        }
+
+        public View getViewFrom(int position)
+        {
+            switch(position)
+            {
+                // PLAY
+                case 0:
+                    return new PlayView();
+
+                // OPTION
+                case 1:
+                    return new OptionsView();
+
+                // HIGHSCORES
+                case 2:
+                    return new HighscoresView();
+                
+                // ABOUT
+                case 3:
+                    return new AboutView();
+
+                default:
+                    throw new NotImplementedException("View's ID not handled.");
+            }
+        }
+
+        public override void onDestroy()
         {
             Debug.WriteLine("Terminate  the ...");
-            //throw new NotImplementedException();
         }
     }
 }

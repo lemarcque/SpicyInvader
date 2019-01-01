@@ -22,7 +22,7 @@ namespace SpicyInvader
     class Program
     {
         private static bool isRunning;                      // Indicates if the program is running
-        private static List<ScreenInfo> navigationList;     // The list of screen that are currently displayed
+        private static List<View> navigationList;           // The list of screen that are currently displayed
         private static byte counterNavigationId;            // The counter to generate screen's navigation id
         private static byte Width;                          // Width size (in character) of the program
         private static byte Height;                         // Height size (in character) of the program
@@ -42,7 +42,7 @@ namespace SpicyInvader
         /// </summary>
         public static void Init()
         {
-            navigationList = new List<ScreenInfo>();
+            navigationList = new List<View>();
         }
 
         public static void Start()
@@ -64,24 +64,29 @@ namespace SpicyInvader
             Console.CursorVisible = false;
         }
 
-        private static void Navigate(View view)
+        public static void Navigate(View view)
         {
             // TODO : state of the current screen are "snapshoted"
             // and stored in In-memory cache.
-            
+            if(navigationList.Count > 0)
+                navigationList[navigationList.Count - 1].onPause();
 
             // Navigate to the view specified
-            view.Display(new ScreenInfo(
+            view.onCreate(new ScreenInfo(
                 view.GetHashCode(),
                 view.GetType().Name));
+            view.onStart();
 
             // Save the view to the list of views currently displayed
-            navigationList.Add(view.ScreenInfo);
+            navigationList.Add(view);
         }
 
         public static void Finish(View view)
         {
-            view.Exit();
+            // Remove the View from the screen
+            view.onDestroy();
+
+            // Remove the View from the list of current views displayed
         }
     }
 }

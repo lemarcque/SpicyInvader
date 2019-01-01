@@ -17,8 +17,8 @@ namespace SpicyInvader.views
     /// </summary>
     public class ScreenInfo
     {
-        private int Id { get; }         // unique identifier associate at each views displayed on screen
-        private string Name { get; }    // The name of the view displayed on screen
+        public int Id { get; }         // unique identifier associate at each views displayed on screen
+        public string Name { get; }    // The name of the view displayed on screen
 
         public ScreenInfo(int id, string name)
         {
