@@ -20,16 +20,14 @@ namespace SpicyInvader.views
         private int currentMenuCursorPos;     // Current position of the cursor on the menu
         private int maxMenuLength;        // Number of items in the menu
         private Screen[] screenName;                    // Name's list of screens that can be displayed
+        
 
         private const int BASE_POSY_CURSOR = 20;
 
-        public MenuView()
-        {
 
-        }
-
-
-
+        /// <summary>
+        /// Creation of the View object
+        /// </summary>
         public override void onCreate(ScreenInfo screenInfo)
         {
             base.onCreate(screenInfo);
@@ -43,7 +41,6 @@ namespace SpicyInvader.views
             }
 
             // Show the body content
-
             int maxLineSize = (Character.SELECT_CURSOR + 5 + Screen.HIGHSCORES.ToString()).Length;
             yPosSelection = BASE_POSY_CURSOR;
             xPosSelection = (width / 2) - (maxLineSize / 2);
@@ -58,12 +55,10 @@ namespace SpicyInvader.views
                 Console.WriteLine(name.ToString());
                 yPosSelection += 2;
             }
-
             
 
             // Show the footer
-
-            
+            // Todo : display a footer ? (credits) ?
         }
 
         /// <summary>
@@ -77,7 +72,15 @@ namespace SpicyInvader.views
             displayCursor(0, currentMenuCursorPos);
 
             // Keyboard event management
-            keyboardHandler();
+            keyboardEventHandler();
+        }
+
+        public override void onPause()
+        {
+            base.onPause();
+
+            // Kills the keyboard press event's handler
+            // Todo : eventThread.Join();
         }
 
         /// <summary>
@@ -107,48 +110,54 @@ namespace SpicyInvader.views
         /// <summary>
         /// Handle keyboard press event safely
         /// </summary>
-        private void keyboardHandler()
+        private void keyboardEventHandler()
         {
-            // Create a new Thread
-            new Thread(() =>
+            if(eventThread == null || eventThread.ThreadState == System.Threading.ThreadState.Stopped)
             {
-                while (true)
+                // Create a new Thread
+                eventThread = new Thread(() =>
                 {
-                    if (Console.KeyAvailable)
+                    while (State == configs.LifecycleState.RESUME)
                     {
-                        ConsoleKeyInfo key = Console.ReadKey(true);
-
-                        switch (key.Key)
+                        if (Console.KeyAvailable)
                         {
-                            case ConsoleKey.UpArrow:
-                                if (currentMenuCursorPos - 1 >= 0)
-                                {
-                                    currentMenuCursorPos--;
-                                }
-                                displayCursor(currentMenuCursorPos + 1, currentMenuCursorPos);
-                                break;
+                            ConsoleKeyInfo key = Console.ReadKey(true);
 
-                            case ConsoleKey.DownArrow:
-                                if (currentMenuCursorPos + 1 < maxMenuLength)
-                                {
-                                    currentMenuCursorPos++;
-                                }
-                                displayCursor(currentMenuCursorPos - 1, currentMenuCursorPos);
-                                break;
+                            switch (key.Key)
+                            {
+                                case ConsoleKey.UpArrow:
+                                    if (currentMenuCursorPos - 1 >= 0)
+                                    {
+                                        currentMenuCursorPos--;
+                                    }
+                                    displayCursor(currentMenuCursorPos + 1, currentMenuCursorPos);
+                                    break;
 
-                            case ConsoleKey.Enter:
-                                Program.Navigate(getViewFrom(currentMenuCursorPos));
-                                break;
+                                case ConsoleKey.DownArrow:
+                                    if (currentMenuCursorPos + 1 < maxMenuLength)
+                                    {
+                                        currentMenuCursorPos++;
+                                    }
+                                    displayCursor(currentMenuCursorPos - 1, currentMenuCursorPos);
+                                    break;
 
-                            default:
-                                // Key press event not handleds
-                                break;
+                                case ConsoleKey.Enter:
+                                    Program.Navigate(getViewFrom(currentMenuCursorPos));
+                                    break;
+
+                                default:
+                                    // Key press event not handleds
+                                    break;
+                            }
                         }
+
                     }
+                });
+            }
 
-                }
-            }).Start();
-
+            // Start the Thread
+            if (!eventThread.IsAlive)
+                eventThread.Start();
         }
 
         public View getViewFrom(int position)

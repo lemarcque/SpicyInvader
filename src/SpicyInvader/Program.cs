@@ -68,7 +68,8 @@ namespace SpicyInvader
         {
             // TODO : state of the current screen are "snapshoted"
             // and stored in In-memory cache.
-            if(navigationList.Count > 0)
+
+            if (navigationList.Count > 0)
                 navigationList[navigationList.Count - 1].onPause();
 
             // Navigate to the view specified
@@ -84,9 +85,21 @@ namespace SpicyInvader
         public static void Finish(View view)
         {
             // Remove the View from the screen
+            view.onPause();
             view.onDestroy();
 
             // Remove the View from the list of current views displayed
+            navigationList.Remove(view);
+
+            // Display the previous View on screen
+            if(navigationList.Count > 0)
+            {
+                navigationList[navigationList.Count - 1].onRestart();
+            }else
+            {
+                Debug.WriteLine("Exit..");
+                System.Environment.Exit(1);
+            }
         }
     }
 }

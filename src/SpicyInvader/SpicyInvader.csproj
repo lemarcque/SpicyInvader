@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="data\DataSource.cs" />
     <Compile Include="data\TextFileManager.cs" />
+    <Compile Include="models\Level.cs" />
     <Compile Include="models\MenuModel.cs" />
     <Compile Include="presenters\MenuPresenter.cs" />
     <Compile Include="presenters\Presenter.cs" />

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SpicyInvader.views
@@ -25,7 +26,8 @@ namespace SpicyInvader.views
         protected byte width { get; }
         protected byte height { get; }
         public ScreenInfo ScreenInfo { get; set; }
-        public LifecycleState State { get; set;  } 
+        public LifecycleState State { get; set;  }
+        protected Thread eventThread;             // Thread that process all instructions relative to an event
 
         public View() {
         
@@ -103,6 +105,9 @@ namespace SpicyInvader.views
         public virtual void onRestart()
         {
             State = LifecycleState.RESTART;
+
+            this.onCreate(ScreenInfo);
+            this.onStart();
         }
 
 
