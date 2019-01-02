@@ -4,6 +4,7 @@
 // Date : 31.12.2018
 
 using SpicyInvader.models;
+using SpicyInvader.views.utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,25 +19,36 @@ namespace SpicyInvader.views
     class OptionsView : View
     {
         
-        private const int CursorPosX = 20;          // Base horizontal position for Console cursor
-        private int CursorPosY = 20;                // Base vertical position for Console cursor
+        private int baseCursorPosX { get; }          // Base horizontal position for Console cursor
+        private int CursorPosY;                // Base vertical position for Console cursor
         private int currentMenuCursorPos;
+        private string[] strMenuLines;              // All text for game's options that will be printed on the console
+        private Level currentLevel;                 // The current level choose by the player
+        private bool isSoundActivated;
+
+        public OptionsView()
+        {
+            baseCursorPosX = (Console.WindowWidth / 2) - (Character.SELECT_CURSOR.ToString().Length + 5 + 7);
+            CursorPosY = 20;
+        }
 
         public override void onCreate(ScreenInfo screenInfo)
         {
             base.onCreate(screenInfo);
 
+            // Set variables and options
+            strMenuLines = new string[]{
+                "Sound",
+                "Level"
+            };
+
+            currentLevel = Level.PADAWAN;
+            isSoundActivated = false;
+
             // Display text
-            
 
-            Console.SetCursorPosition(CursorPosX, CursorPosY);
-            Console.WriteLine("Sound : ON");
-
-            CursorPosY += 2;
-            Console.SetCursorPosition(CursorPosX, CursorPosY);
-            Console.WriteLine("Level : " + Level.PADAWAN);
-
-            currentMenuCursorPos = 1; 
+            // Set the position of the menu cursor
+            setCursorMenuPos(0);
         }
 
         public override void onResume()
@@ -81,6 +93,11 @@ namespace SpicyInvader.views
                                 case ConsoleKey.DownArrow:
                                     setCursorMenuPos(1);
                                     break;
+
+                                case ConsoleKey.Spacebar:
+                                    switchOptionValue();
+                                    setCursorMenuPos(currentMenuCursorPos);
+                                    break;
                             }
                         }
                     }
@@ -91,18 +108,69 @@ namespace SpicyInvader.views
             eventThread.Start();
         }
 
+        /// <summary>
+        /// Intervert the value of an optin
+        /// </summary>
+        private void switchOptionValue()
+        {
+            switch(currentMenuCursorPos)
+            {
+                case 0:
+                    isSoundActivated = !isSoundActivated;
+                    break;
+
+                case 1:
+                    currentLevel = (currentLevel == Level.JEDI) ? Level.PADAWAN : Level.JEDI;
+                    break;
+            }
+        }
+
         private void setCursorMenuPos(int position)
         {
             currentMenuCursorPos = position;
+            String sentance;
+
+            // Reset the color to the initial (gray)
+            Console.ForegroundColor = ConsoleColor.White;
 
             if (position == 0)
-                CursorPosY = 20;
-            else
-                CursorPosY = 22;
+            {
+                // Reset color for the previous line
+                Console.SetCursorPosition(baseCursorPosX, CursorPosY);
+                Console.WriteLine(Character.SPACE);
 
-            Console.SetCursorPosition(CursorPosX, CursorPosY);
+                Console.SetCursorPosition(baseCursorPosX + 5, 22);
+                Console.WriteLine(strMenuLines[1] + " : " + currentLevel);
+                
+                // Change position for sound's option
+                CursorPosY = 20;
+                string soundValue = (isSoundActivated) ? "ON" : "OFF";
+                sentance = strMenuLines[0] + " : " + soundValue;
+            }
+            else
+            {
+                // Reset color for the previous line
+                Console.SetCursorPosition(baseCursorPosX, CursorPosY);
+                Console.WriteLine(Character.SPACE);
+
+                Console.SetCursorPosition(baseCursorPosX + 5, 20);
+                string currentSoundValue = (isSoundActivated) ? "ON" : "OFF";
+                Console.WriteLine(strMenuLines[0] + " : " + currentSoundValue);
+
+                // Change position for levels option
+                CursorPosY = 22;
+                sentance = strMenuLines[1] + " : " + currentLevel;
+            }
+
+            // Print cursor arrow character '>'
+            Console.SetCursorPosition(baseCursorPosX, CursorPosY);
+            ConsoleUtils.ClearCurrentConsoleLine();
+            Console.WriteLine(Character.SELECT_CURSOR.ToString());
+
+            // Print sentance for the current menu's selection
+            Console.SetCursorPosition(baseCursorPosX + 5, CursorPosY);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(Co)
+            Console.WriteLine(sentance);
         }
     }
 }

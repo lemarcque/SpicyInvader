@@ -76,6 +76,7 @@ namespace SpicyInvader
             view.onCreate(new ScreenInfo(
                 view.GetHashCode(),
                 view.GetType().Name));
+
             view.onStart();
 
             // Save the view to the list of views currently displayed

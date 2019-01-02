@@ -17,8 +17,8 @@ namespace SpicyInvader.presenters
     class MenuPresenter : Presenter
     {
 
-        private MenuView View;
-        private MenuModel Model;
+        private MenuView View;          // View attached to the Presenter
+        private MenuModel Model;        // Model attached to the Presenter
 
         public MenuPresenter(View view, Model model)
         {

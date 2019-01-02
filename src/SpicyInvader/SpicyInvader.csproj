@@ -60,6 +60,7 @@
     <Compile Include="views\configs\ScreenInfo.cs" />
     <Compile Include="views\OptionsView.cs" />
     <Compile Include="views\PlayView.cs" />
+    <Compile Include="views\utils\ConsoleUtils.cs" />
     <Compile Include="views\View.cs" />
   </ItemGroup>
   <ItemGroup>
