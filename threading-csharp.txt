@@ -1,4 +1,0 @@
-lock : https://stackoverflow.com/questions/8924500/is-this-lock-usage-thread-safe
-thread-safety : https://www.c-sharpcorner.com/UploadFile/1c8574/thread-safety369/
-threading in c# : http://www.albahari.com/threading/
-
