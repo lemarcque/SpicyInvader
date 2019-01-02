@@ -47,6 +47,7 @@
     <Compile Include="models\Level.cs" />
     <Compile Include="models\MenuModel.cs" />
     <Compile Include="presenters\MenuPresenter.cs" />
+    <Compile Include="presenters\OptionsPresenter.cs" />
     <Compile Include="presenters\Presenter.cs" />
     <Compile Include="models\Model.cs" />
     <Compile Include="Program.cs" />

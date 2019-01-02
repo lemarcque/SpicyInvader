@@ -12,9 +12,9 @@ namespace SpicyInvader.presenters
     {
 
         private OptionsView View;          // View attached to the Presenter
-        private OptionsModel Model;        // Model attached to the Presenter
+        //private OptionsModel Model;        // Model attached to the Presenter
 
-        public MenuPresenter(View view, Model model)
+        public OptionsPresenter(View view, Model model)
         {
             this.View = (OptionsView) view;
             //this.Model = (OptionsModel) model;

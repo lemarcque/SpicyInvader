@@ -98,6 +98,10 @@ namespace SpicyInvader.views
                                     switchOptionValue();
                                     setCursorMenuPos(currentMenuCursorPos);
                                     break;
+
+                                case ConsoleKey.Escape:
+                                    Program.Finish(this);
+                                    break;
                             }
                         }
                     }
@@ -171,6 +175,7 @@ namespace SpicyInvader.views
             Console.SetCursorPosition(baseCursorPosX + 5, CursorPosY);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(sentance);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
