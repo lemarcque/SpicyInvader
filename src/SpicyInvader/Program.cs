@@ -50,10 +50,7 @@ namespace SpicyInvader
 
             if(!isRunning) {
                 // Creation of Dependency
-                MenuView view = new MenuView();
-                MenuModel model = new MenuModel();
-                MenuPresenter presenter = new MenuPresenter(view, model);
-                Navigate(view);
+                Navigate(new MenuView());
 
                 // Enable the running mode
                 isRunning = true;
@@ -66,11 +63,16 @@ namespace SpicyInvader
 
         public static void Navigate(View view)
         {
+            
+
             // TODO : state of the current screen are "snapshoted"
             // and stored in In-memory cache.
 
             if (navigationList.Count > 0)
                 navigationList[navigationList.Count - 1].onPause();
+
+            // Init presenter
+            Presenter presenter = DependencyFactory.getDependency(view);
 
             // Navigate to the view specified
             view.onCreate(new ScreenInfo(

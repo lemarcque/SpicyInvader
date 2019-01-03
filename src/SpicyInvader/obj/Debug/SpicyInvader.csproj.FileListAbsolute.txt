@@ -30,3 +30,7 @@ C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\obj\Debug\SpicyInvader.csp
 C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\obj\Debug\SpicyInvader.csproj.CoreCompileInputs.cache
 C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\obj\Debug\SpicyInvader.exe
 C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\obj\Debug\SpicyInvader.pdb
+C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\bin\Debug\Newtonsoft.Json.dll
+C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\bin\Debug\Newtonsoft.Json.xml
+C:\Users\root\Documents\SpicyInvader\src\SpicyInvader\obj\Debug\SpicyInvader.csproj.CopyComplete

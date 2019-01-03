@@ -19,8 +19,8 @@ namespace SpicyInvader.models
     /// </summary>
     class MenuModel : Model
     {
-        public Presenter Presenter { get; set; }    // DIP - Reference of the Presenter
-        private Dictionary<Screen, String> menu;
+        public Presenter Presenter { get; set; }    // Reference of the Presenter
+        private Dictionary<Screen, String> menu;    // ??
 
         public MenuModel()
         {

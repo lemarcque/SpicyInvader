@@ -15,5 +15,22 @@ namespace SpicyInvader.views
     {
 
 
+        public override void onCreate(ScreenInfo screenInfo)
+        {
+            base.onCreate(screenInfo);
+
+            // ...
+        }
+
+        /// <summary>
+        /// The View lose its focus and enter in to the paused state.
+        /// </summary>
+        public override void onPause()
+        {
+            base.onPause();
+
+            // Kills the keyboard press event's handler
+            // Todo : eventThread.Join();
+        }
     }
 }

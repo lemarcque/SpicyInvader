@@ -4,27 +4,23 @@
 // Date : 31.12.2018
 
 using SpicyInvader.models;
+using SpicyInvader.presenters;
 using SpicyInvader.views.utils;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SpicyInvader.views
 {
 
     class OptionsView : View
     {
-        
-        private int baseCursorPosX { get; }          // Base horizontal position for Console cursor
-        private int CursorPosY;                // Base vertical position for Console cursor
+
+        public OptionsPresenter Presenter { get; set; }        // Reference of the Presenter
+
+        private int baseCursorPosX { get; }             // Base horizontal position for Console cursor
+        private int CursorPosY;                         // Base vertical position for Console cursor
         private int currentMenuCursorPos;
-        private string[] strMenuLines;              // All text for game's options that will be printed on the console
-        private Level currentLevel;                 // The current level choose by the player
-        private bool isSoundActivated;
+        private string[] strMenuLines;                  // All text for game's options that will be printed on the console
 
         public OptionsView()
         {
@@ -32,6 +28,9 @@ namespace SpicyInvader.views
             CursorPosY = 20;
         }
 
+        /// <summary>
+        /// Creation of the View object
+        /// </summary>
         public override void onCreate(ScreenInfo screenInfo)
         {
             base.onCreate(screenInfo);
@@ -42,15 +41,15 @@ namespace SpicyInvader.views
                 "Level"
             };
 
-            currentLevel = Level.PADAWAN;
-            isSoundActivated = false;
-
             // Display text
 
             // Set the position of the menu cursor
             setCursorMenuPos(0);
         }
 
+        /// <summary>
+        /// The view is displayed on the screen and ready to be manipulated.
+        /// </summary>
         public override void onResume()
         {
             base.onResume();
@@ -59,6 +58,9 @@ namespace SpicyInvader.views
             this.keyboardEventHandler();
         }
 
+        /// <summary>
+        /// The View lose its focus and enter in to the paused state.
+        /// </summary>
         public override void onPause()
         {
             base.onPause();
@@ -97,6 +99,9 @@ namespace SpicyInvader.views
                                 case ConsoleKey.Spacebar:
                                     switchOptionValue();
                                     setCursorMenuPos(currentMenuCursorPos);
+
+                                    String soundModeValue = (Presenter.getSoundModeActivated()) ? "ON" : "OFF";
+                                    Presenter.updateGameOptions(soundModeValue, Presenter.getCurrentLevel());
                                     break;
 
                                 case ConsoleKey.Escape:
@@ -120,11 +125,11 @@ namespace SpicyInvader.views
             switch(currentMenuCursorPos)
             {
                 case 0:
-                    isSoundActivated = !isSoundActivated;
+                    Presenter.switchSoundMode();
                     break;
 
                 case 1:
-                    currentLevel = (currentLevel == Level.JEDI) ? Level.PADAWAN : Level.JEDI;
+                    Presenter.switchCurrentLevel();
                     break;
             }
         }
@@ -144,11 +149,11 @@ namespace SpicyInvader.views
                 Console.WriteLine(Character.SPACE);
 
                 Console.SetCursorPosition(baseCursorPosX + 5, 22);
-                Console.WriteLine(strMenuLines[1] + " : " + currentLevel);
+                Console.WriteLine(strMenuLines[1] + " : " + Presenter.getCurrentLevel());
                 
                 // Change position for sound's option
                 CursorPosY = 20;
-                string soundValue = (isSoundActivated) ? "ON" : "OFF";
+                string soundValue = (Presenter.getSoundModeActivated()) ? "ON" : "OFF";
                 sentance = strMenuLines[0] + " : " + soundValue;
             }
             else
@@ -158,12 +163,12 @@ namespace SpicyInvader.views
                 Console.WriteLine(Character.SPACE);
 
                 Console.SetCursorPosition(baseCursorPosX + 5, 20);
-                string currentSoundValue = (isSoundActivated) ? "ON" : "OFF";
+                string currentSoundValue = (Presenter.getSoundModeActivated()) ? "ON" : "OFF";
                 Console.WriteLine(strMenuLines[0] + " : " + currentSoundValue);
 
                 // Change position for levels option
                 CursorPosY = 22;
-                sentance = strMenuLines[1] + " : " + currentLevel;
+                sentance = strMenuLines[1] + " : " + Presenter.getCurrentLevel();
             }
 
             // Print cursor arrow character '>'
