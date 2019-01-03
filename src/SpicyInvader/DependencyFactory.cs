@@ -38,7 +38,8 @@ namespace SpicyInvader
             }
             else if(view is PlayView)
             {
-                return null;
+                Model model = new PlayModel();
+                return new PlayPresenter(view, model);
             }
 
             return null;

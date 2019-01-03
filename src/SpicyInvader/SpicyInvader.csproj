@@ -51,8 +51,10 @@
     <Compile Include="models\Level.cs" />
     <Compile Include="models\MenuModel.cs" />
     <Compile Include="models\OptionsModel.cs" />
+    <Compile Include="models\PlayModel.cs" />
     <Compile Include="presenters\MenuPresenter.cs" />
     <Compile Include="presenters\OptionsPresenter.cs" />
+    <Compile Include="presenters\PlayPresenter.cs" />
     <Compile Include="presenters\Presenter.cs" />
     <Compile Include="models\Model.cs" />
     <Compile Include="Program.cs" />

@@ -34,21 +34,35 @@ namespace SpicyInvader.presenters
             Model.updateGameOptions(soundMode, level);
         }
 
+        /// <summary>
+        /// Return the current sound's mode
+        /// </summary>
+        /// <returns></returns>
         public bool getSoundModeActivated()
         {
             return Model.IsSoundActivated;
         }
 
+        /// <summary>
+        /// Return the current level of the game
+        /// </summary>
+        /// <returns></returns>
         public Level getCurrentLevel()
         {
             return Model.CurrentLevel;
         }
 
+        /// <summary>
+        /// Switch between sound's mdoe
+        /// </summary>
         public void switchSoundMode()
         {
             Model.IsSoundActivated = !Model.IsSoundActivated;
         }
 
+        /// <summary>
+        /// Switch the between level
+        /// </summary>
         public void switchCurrentLevel()
         {
             Model.CurrentLevel = (Model.CurrentLevel == Level.JEDI) ? Level.PADAWAN : Level.JEDI; ;
