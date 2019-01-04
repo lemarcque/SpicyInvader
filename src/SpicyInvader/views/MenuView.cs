@@ -35,15 +35,15 @@ namespace SpicyInvader.views
             // Show the header
             foreach(string line in Presenter.GetHeader())
             {
-                int xPos = (width / 2) - (line.Length / 2);
+                int xPos = (Width / 2) - (line.Length / 2);
                 Console.SetCursorPosition(xPos, Console.CursorTop);
                 Console.WriteLine(line);
             }
 
             // Show the body content
-            int maxLineSize = (Character.SELECT_CURSOR + 5 + Screen.HIGHSCORES.ToString()).Length;
+            int maxLineSize = (Char.SELECT_CURSOR + 5 + Screen.HIGHSCORES.ToString()).Length;
             yPosSelection = BASE_POSY_CURSOR;
-            xPosSelection = (width / 2) - (maxLineSize / 2);
+            xPosSelection = (Width / 2) - (maxLineSize / 2);
             
             screenName = new Screen[]{ Screen.PLAY, Screen.OPTIONS, Screen.HIGHSCORES, Screen.ABOUT };
             maxMenuLength = screenName.Length;
@@ -95,12 +95,12 @@ namespace SpicyInvader.views
             // Erase the last caracter at the current menu's cursor position
             int oldYPos = BASE_POSY_CURSOR + (previousMenuPosition * 2);
             Console.SetCursorPosition(xPosSelection - 5, oldYPos);
-            Console.Write(Character.SPACE);
+            Console.Write(Char.SPACE);
 
             // change position of "menu's cursor selection"
             int nextYPos = BASE_POSY_CURSOR +  (menuPosition * 2);
             Console.SetCursorPosition(xPosSelection - 5, nextYPos);
-            Console.Write(Character.SELECT_CURSOR);
+            Console.Write(Char.SELECT_CURSOR);
 
             // reset default cursor position
             Console.SetCursorPosition(xPosSelection, currentConsoleCursorPos);

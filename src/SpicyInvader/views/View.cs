@@ -23,22 +23,51 @@ namespace SpicyInvader.views
     public abstract class View
     {
 
-        protected byte width { get; }
-        protected byte height { get; }
+        private int width;      // Width of the View
+        private int height;     // Height of the View
+
+        protected int Width
+        {
+            get { return width; }
+
+            set { width = value;  resizeWindow(); }
+        }
+        protected int Height
+        {
+            get { return height; }
+
+            set { height = value;  resizeWindow(); }
+        }
+
         public ScreenInfo ScreenInfo { get; set; }
         public LifecycleState State { get; set;  }
         protected Thread eventThread;             // Thread that process all instructions relative to an event
 
         public View() {
-        
+
+            // Init value of width
+            width = Program.Width;
+            height = Program.Height;
+
+
             // set the size of the window
-            width = 50;
-            height = 50;
+            Width = 50;
+            Height = 50;
+        }
+
+        /// <summary>
+        /// Resize the size of the Window
+        /// </summary>
+        private void resizeWindow()
+        {
+            Program.Width = width;
+            Program.Height = height;
 
             // modify the size of the window
+            Console.SetWindowSize(Program.Width, Program.Height);
+
             // remove the scrollbar in the window
-            Console.SetWindowSize(width, height);       
-            Console.SetBufferSize(width, height);       
+            Console.SetBufferSize(Program.Width, Program.Height);
         }
 
         /// <summary>

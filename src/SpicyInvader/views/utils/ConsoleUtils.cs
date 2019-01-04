@@ -12,6 +12,7 @@ namespace SpicyInvader.views.utils
     /// </summary>
     class ConsoleUtils
     {
+
         /// <summary>
         /// Clear all a specific lines instead of whole the console content.
         /// </summary>
@@ -25,6 +26,24 @@ namespace SpicyInvader.views.utils
 
             Console.SetCursorPosition(currentColumnCursor, currentLineCursor);
             //Console.SetCursorPosition(0, currentLineCursor);
+        }
+
+        /// <summary>
+        /// Return the current position of the Consle cursor to perform an operation
+        /// </summary>
+        /// <returns></returns>
+        public static CursorPosition SnapCursorPosition()
+        {
+            return new CursorPosition(Console.CursorTop, Console.CursorLeft);
+        }
+
+        /// <summary>
+        /// Reset the position of the console's cursor
+        /// </summary>
+        /// <param name="position"></param>
+        public static void ResetCursorPosition(CursorPosition position)
+        {
+            Console.SetCursorPosition(position.Left, position.Top);
         }
     }
 }

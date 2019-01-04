@@ -48,6 +48,15 @@
     <Compile Include="data\DataSource.cs" />
     <Compile Include="data\TextFileManager.cs" />
     <Compile Include="DependencyFactory.cs" />
+    <Compile Include="domain\character\Camp.cs" />
+    <Compile Include="domain\character\Character.cs" />
+    <Compile Include="domain\character\Crab.cs" />
+    <Compile Include="domain\character\Invader.cs" />
+    <Compile Include="domain\character\Octopus.cs" />
+    <Compile Include="domain\character\Ship.cs" />
+    <Compile Include="domain\character\Squid.cs" />
+    <Compile Include="domain\Direction.cs" />
+    <Compile Include="domain\Missile.cs" />
     <Compile Include="models\Level.cs" />
     <Compile Include="models\MenuModel.cs" />
     <Compile Include="models\OptionsModel.cs" />
@@ -60,7 +69,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="views\AboutView.cs" />
-    <Compile Include="views\Character.cs" />
+    <Compile Include="views\Char.cs" />
     <Compile Include="views\configs\LifecycleState.cs" />
     <Compile Include="views\HighscoresView.cs" />
     <Compile Include="views\MenuView.cs" />
@@ -69,6 +78,7 @@
     <Compile Include="views\OptionsView.cs" />
     <Compile Include="views\PlayView.cs" />
     <Compile Include="views\utils\ConsoleUtils.cs" />
+    <Compile Include="views\utils\CursorPosition.cs" />
     <Compile Include="views\View.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,5 +92,6 @@
     <Content Include="data\txt\spaceinvader-5.txt" />
     <Content Include="data\txt\spaceinvader-4.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

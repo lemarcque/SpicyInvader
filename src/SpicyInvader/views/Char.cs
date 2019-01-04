@@ -9,7 +9,7 @@ namespace SpicyInvader.views
     /// <summary>
     /// Describe a list of ASCII character.
     /// </summary>
-    public class Character
+    public class Char
     {
 
         public const char SELECT_CURSOR = '>';

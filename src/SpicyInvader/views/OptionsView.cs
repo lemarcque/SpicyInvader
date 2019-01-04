@@ -24,7 +24,7 @@ namespace SpicyInvader.views
 
         public OptionsView()
         {
-            baseCursorPosX = (Console.WindowWidth / 2) - (Character.SELECT_CURSOR.ToString().Length + 5 + 7);
+            baseCursorPosX = (Console.WindowWidth / 2) - (Char.SELECT_CURSOR.ToString().Length + 5 + 7);
             CursorPosY = 20;
         }
 
@@ -146,7 +146,7 @@ namespace SpicyInvader.views
             {
                 // Reset color for the previous line
                 Console.SetCursorPosition(baseCursorPosX, CursorPosY);
-                Console.WriteLine(Character.SPACE);
+                Console.WriteLine(Char.SPACE);
 
                 Console.SetCursorPosition(baseCursorPosX + 5, 22);
                 Console.WriteLine(strMenuLines[1] + " : " + Presenter.getCurrentLevel());
@@ -160,7 +160,7 @@ namespace SpicyInvader.views
             {
                 // Reset color for the previous line
                 Console.SetCursorPosition(baseCursorPosX, CursorPosY);
-                Console.WriteLine(Character.SPACE);
+                Console.WriteLine(Char.SPACE);
 
                 Console.SetCursorPosition(baseCursorPosX + 5, 20);
                 string currentSoundValue = (Presenter.getSoundModeActivated()) ? "ON" : "OFF";
@@ -174,7 +174,7 @@ namespace SpicyInvader.views
             // Print cursor arrow character '>'
             Console.SetCursorPosition(baseCursorPosX, CursorPosY);
             ConsoleUtils.ClearCurrentConsoleLine();
-            Console.WriteLine(Character.SELECT_CURSOR.ToString());
+            Console.WriteLine(Char.SELECT_CURSOR.ToString());
 
             // Print sentance for the current menu's selection
             Console.SetCursorPosition(baseCursorPosX + 5, CursorPosY);

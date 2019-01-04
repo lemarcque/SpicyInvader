@@ -4,6 +4,7 @@
 // Date : 04.01.2019
 
 using SpicyInvader.presenters;
+using SpicyInvaders.domain.character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,19 @@ namespace SpicyInvader.models
         public int Score { get; set; }                          // The current score of the player
         public int Lives { get; set; }                          // The current number of lives of the player
 
+        // Variable for the game
+        public Ship Ship { get; }                          // The ship of the player
+        private List<Invader> ennemies;             // The list of invaders
+
         public PlayModel()
         {
             Score = 0;
             Lives = 3;  // Todo : Throw an Exception, if settings value > 3
+
+            // Creation of the Ship
+            Ship = new Ship();
+            Ship.SetX(Program.Width / 2);
+            Ship.SetY(Program.Height - 15);
         }
     }
 }

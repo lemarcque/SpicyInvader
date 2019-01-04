@@ -24,8 +24,8 @@ namespace SpicyInvader
         private static bool isRunning;                      // Indicates if the program is running
         private static List<View> navigationList;           // The list of screen that are currently displayed
         private static byte counterNavigationId;            // The counter to generate screen's navigation id
-        private static byte Width;                          // Width size (in character) of the program
-        private static byte Height;                         // Height size (in character) of the program
+        public static int Width { get; set; }                          // Width size (in character) of the program
+        public static int Height { get; set; }                         // Height size (in character) of the program
 
         /// <summary>
         /// Entry point of the program.
@@ -43,6 +43,10 @@ namespace SpicyInvader
         public static void Init()
         {
             navigationList = new List<View>();
+
+            // Init value of the width and height console
+            Width = Console.WindowWidth;
+            Height = Console.WindowHeight;
         }
 
         public static void Start()

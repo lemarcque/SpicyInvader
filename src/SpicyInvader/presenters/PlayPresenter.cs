@@ -5,6 +5,7 @@
 
 using SpicyInvader.models;
 using SpicyInvader.views;
+using SpicyInvaders.domain.character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,22 @@ namespace SpicyInvader.presenters
         {
             View.showLives(Model.Lives);
             View.showScore(Model.Score);
+
+            // Display the Ship
+            
+            View.ShowShip();
+
+            // creation of ennemies
+
+            // Display all Invaders
+
+            // Start a loop ??
+            // creation of a timer for shooting missile for invaders)
+            /*timer = new Timer(INTERVAL_INVADER_MISSILE_SHOOT);
+            timer.Elapsed += new ElapsedEventHandler(OnGenerateMissile);
+            timer.Start();*/
+
+            // Start a keyboard handler
         }
 
         public int getCurrentScore()
@@ -45,6 +62,15 @@ namespace SpicyInvader.presenters
         public int getCurrentLives()
         {
             return Model.Lives;
+        }
+
+        /// <summary>
+        /// Return the Ship of the player
+        /// </summary>
+        /// <returns></returns>
+        public Ship GetShip()
+        {
+            return Model.Ship;
         }
     }
 }

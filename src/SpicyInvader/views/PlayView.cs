@@ -4,6 +4,7 @@
 // Date : 31.12.2018
 
 using SpicyInvader.presenters;
+using SpicyInvader.views.utils;
 using System;
 
 namespace SpicyInvader.views
@@ -16,7 +17,7 @@ namespace SpicyInvader.views
     {
 
 
-        public Presenter Presenter { get; set; }    // Reference of the Presenter
+        public PlayPresenter Presenter { get; set; }    // Reference of the Presenter
 
         // Margin of the screen
         private static int MARGIN = 5;
@@ -37,7 +38,6 @@ namespace SpicyInvader.views
 
             Console.Read();
         }
-        
 
         /// <summary>
         /// The View lose its focus and enter in to the paused state.
@@ -68,6 +68,10 @@ namespace SpicyInvader.views
             Console.Write(score);
         }
 
+        /// <summary>
+        /// Change the score in the menu's interface
+        /// </summary>
+        /// <param name="lives"></param>
         public void showLives(int lives)
         {
             const String sentanceLives = "Lives";
@@ -80,7 +84,7 @@ namespace SpicyInvader.views
             }
 
             // Show the sentance "Lives"
-            Console.SetCursorPosition(width - (MARGIN) - sentanceLongestSize - sentanceLongestSize, POS_LIVES_Y);
+            Console.SetCursorPosition(Width - (MARGIN) - sentanceLongestSize - sentanceLongestSize, POS_LIVES_Y);
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(sentanceLives);
 
@@ -88,6 +92,24 @@ namespace SpicyInvader.views
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(sentanceHealth);
 
+        }
+
+        /// <summary>
+        /// Display the ship of the player
+        /// </summary>
+        public void ShowShip()
+        {
+            // Save console's cursor position
+            CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
+
+            // Draw the ship
+            int posX = Presenter.GetShip().GetX();
+            int posY = Presenter.GetShip().GetY();
+            Console.SetCursorPosition(posX, posY);
+            Console.Write(Presenter.GetShip().Drawing);
+
+            // reset the console cursor at his position
+            ConsoleUtils.ResetCursorPosition(cursorPos);
         }
     }
 }
