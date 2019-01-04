@@ -3,6 +3,7 @@
 // Lieu : ETML - Lausanne
 // Date : 02.01.2019
 
+using SpicyInvaders.domain.character;
 using System;
 
 namespace SpicyInvader.views.utils
@@ -44,6 +45,26 @@ namespace SpicyInvader.views.utils
         public static void ResetCursorPosition(CursorPosition position)
         {
             Console.SetCursorPosition(position.Left, position.Top);
+        }
+
+        /// <summary>
+        /// Write a character on the console
+        /// </summary>
+        /// <param name="posX">The horizontal position on the console</param>
+        /// <param name="posY">The vertical position on the console</param>
+        /// <param name="asciiChar">An ASCII character</param>
+        public static void FastDraw(int posX, int posY, Character character)
+        {
+            // Save console's cursor position
+            CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
+
+            // Draw the character
+            Console.ForegroundColor = character.Color;
+            Console.SetCursorPosition(posX, posY);
+            Console.Write(character);
+
+            // reset the console cursor at his position
+            ConsoleUtils.ResetCursorPosition(cursorPos);
         }
     }
 }

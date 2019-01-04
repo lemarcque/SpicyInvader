@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Author : Henoc Sese
+// Description : An .NET Implementation of the Space Invader
+// Lieu : ETML - Lausanne
+// Date : 05.01.2018
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +15,7 @@ namespace SpicyInvaders.domain.character
     {
         public Squid()
         {
-            this.SetColor(ConsoleColor.White);
+            Color = (ConsoleColor.White);
             scoreGain = 10;
         }
     }

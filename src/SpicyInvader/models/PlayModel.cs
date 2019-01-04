@@ -27,7 +27,7 @@ namespace SpicyInvader.models
 
         // Variable for the game
         public Ship Ship { get; }                          // The ship of the player
-        private List<Invader> ennemies;             // The list of invaders
+        public List<Invader> Invaders { get; }             // The list of invaders
 
         public PlayModel()
         {
@@ -38,6 +38,9 @@ namespace SpicyInvader.models
             Ship = new Ship();
             Ship.SetX(Program.Width / 2);
             Ship.SetY(Program.Height - 15);
+
+            // Creation of the ennemies object
+            Invaders = new List<Invader>();
         }
     }
 }

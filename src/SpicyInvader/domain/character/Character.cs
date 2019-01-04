@@ -15,8 +15,8 @@ namespace SpicyInvaders.domain.character
     abstract class Character
     {
 
-        protected int posX;       // horizontal position of the character
-        protected int posY;       // vertical position of the character
+        public int X { get; set; }       // horizontal position of the character
+        public int Y { get; set; }       // vertical position of the character
         protected int speedX;     // The horizontal speed of the character
         protected int speedY;     // The vertical speed of the character
         protected int size;       
@@ -30,8 +30,8 @@ namespace SpicyInvaders.domain.character
         protected Missile missile;                    // The ship has only one missile
 
 
-        
-        private ConsoleColor color;
+
+        public ConsoleColor Color { get; set; }         // Color of the character ascii
 
         
         /// <summary>
@@ -59,8 +59,8 @@ namespace SpicyInvaders.domain.character
             isShooting = state;
 
             missile.isMoving = state;
-            missile.SetX(posX);
-            missile.SetY(posY - 2);
+            missile.SetX(X);
+            missile.SetY(Y - 2);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SpicyInvaders.domain.character
         /// <returns></returns>
         public override String ToString()
         {
-            return name;
+            return Drawing;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SpicyInvaders.domain.character
         /// <returns></returns>
         public int GetX()
         {
-            return posX;
+            return X;
         }
 
         /// <summary>
@@ -113,18 +113,18 @@ namespace SpicyInvaders.domain.character
         /// <returns></returns>
         public int GetY()
         {
-            return posY;
+            return Y;
         }
 
         public virtual void SetX(int posX)
         {
-            this.posX = posX;
+            this.X = posX;
             // Test ...
         }
 
         public virtual void SetY(int posY)
         {
-            this.posY = posY;
+            this.Y = posY;
         }
 
         public void SetSize(int size)
@@ -223,18 +223,6 @@ namespace SpicyInvaders.domain.character
 
             return false;
         }
-
-
-        protected void SetColor(ConsoleColor color)
-        {
-            this.color = color;
-        }
-
-        public void SetAsciiCharacter(String character)
-        {
-            this.Drawing = character;
-        }
         
-
     }
 }

@@ -16,7 +16,7 @@ namespace SpicyInvaders.domain.character
 
         public Crab()
         {
-            SetColor(ConsoleColor.Yellow);
+            Color = ConsoleColor.White;
             scoreGain = 20;
         }
 

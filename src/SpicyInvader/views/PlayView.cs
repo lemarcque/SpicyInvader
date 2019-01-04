@@ -5,6 +5,7 @@
 
 using SpicyInvader.presenters;
 using SpicyInvader.views.utils;
+using SpicyInvaders.domain.character;
 using System;
 
 namespace SpicyInvader.views
@@ -99,17 +100,22 @@ namespace SpicyInvader.views
         /// </summary>
         public void ShowShip()
         {
-            // Save console's cursor position
-            CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
-
             // Draw the ship
             int posX = Presenter.GetShip().GetX();
             int posY = Presenter.GetShip().GetY();
-            Console.SetCursorPosition(posX, posY);
-            Console.Write(Presenter.GetShip().Drawing);
+            ConsoleUtils.FastDraw(posX, posY, Presenter.GetShip());
+        }
 
-            // reset the console cursor at his position
-            ConsoleUtils.ResetCursorPosition(cursorPos);
+        /// <summary>
+        /// Display all character of the invaders
+        /// </summary>
+        public void ShowInvaders()
+        {
+            foreach (Invader invader in Presenter.GetInvaders())
+            {
+                // Draw the ship
+                ConsoleUtils.FastDraw(invader.X, invader.Y, invader);
+            }
         }
     }
 }

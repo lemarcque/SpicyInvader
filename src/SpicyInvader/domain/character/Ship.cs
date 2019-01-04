@@ -14,7 +14,8 @@ namespace SpicyInvaders.domain.character
         public Ship():base(Camp.Allied)
         {
             missile = new Missile(this);
-            this.SetAsciiCharacter("▲");
+            Drawing = "▲";
+            Color = ConsoleColor.Yellow;
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace SpicyInvaders.domain.character
         /// <param name="posX"></param>
         public override void SetX(int posX)
         {
-            this.posX = posX;
+            this.X = posX;
             missile.SetX(posX);
         }
 
@@ -33,7 +34,7 @@ namespace SpicyInvaders.domain.character
         /// <param name="posY"></param>
         public override void SetY(int posY)
         {
-            this.posY = posY;
+            this.Y = posY;
             missile.SetY(posY);
         }
 

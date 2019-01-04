@@ -16,7 +16,7 @@ namespace SpicyInvaders.domain.character
 
         public Octopus()
         {
-            SetColor(ConsoleColor.Blue);
+            Color = ConsoleColor.Blue;
             scoreGain = 40;
         }
     }
