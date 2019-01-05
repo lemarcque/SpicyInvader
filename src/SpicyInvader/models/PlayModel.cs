@@ -29,6 +29,8 @@ namespace SpicyInvader.models
         public Ship Ship { get; }                          // The ship of the player
         public List<Invader> Invaders { get; }             // The list of invaders
 
+        public Invader CurrentInvaderMissileOwner { get; set; }
+
         public PlayModel()
         {
             Score = 0;

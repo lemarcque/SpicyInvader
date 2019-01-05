@@ -26,7 +26,7 @@ namespace SpicyInvaders.domain.character
         public override void SetX(int posX)
         {
             this.X = posX;
-            missile.SetX(posX);
+            missile.X = posX;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace SpicyInvaders.domain.character
         public override void SetY(int posY)
         {
             this.Y = posY;
-            missile.SetY(posY);
+            missile.Y = posY;
         }
 
         

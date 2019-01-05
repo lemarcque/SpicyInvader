@@ -11,7 +11,7 @@ namespace SpicyInvaders.domain.character
     /// <summary>
     /// Represent an Invader
     /// </summary>
-    abstract class Invader : Character
+    public abstract class Invader : Character
     {
         protected int row;
         protected int column;

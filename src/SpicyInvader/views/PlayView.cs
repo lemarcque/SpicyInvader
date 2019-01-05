@@ -64,35 +64,43 @@ namespace SpicyInvader.views
         {
             if (eventThread == null)
             {
+                int cond = 2000;
+                int thick = 0;
+
                 // Create a new Thread
                 eventThread = new Thread(() =>
                 {
                     while (State == configs.LifecycleState.RESUME)
                     {
-                        if (Console.KeyAvailable)
+                        while(thick % cond == 0)
                         {
-                            ConsoleKeyInfo key = Console.ReadKey(true);
-
-                            switch (key.Key)
+                            if (Console.KeyAvailable)
                             {
-                                case ConsoleKey.LeftArrow:
-                                    Presenter.moveShip(Direction.Left);
-                                    break;
+                                ConsoleKeyInfo key = Console.ReadKey(true);
 
-                                case ConsoleKey.RightArrow:
-                                    Presenter.moveShip(Direction.Right);
-                                    break;
+                                switch (key.Key)
+                                {
+                                    case ConsoleKey.LeftArrow:
+                                         Presenter.moveShip(Direction.Left);
+                                        break;
 
-                                case ConsoleKey.Spacebar:
-                                    // Todo : ...
+                                    case ConsoleKey.RightArrow:
+                                        Presenter.moveShip(Direction.Right);
+                                        break;
 
-                                    break;
+                                    case ConsoleKey.Spacebar:
+                                        // Todo : ...
 
-                                case ConsoleKey.Escape:
-                                    Program.Finish(this);
-                                    break;
+                                        break;
+
+                                    case ConsoleKey.Escape:
+                                        Program.Finish(this);
+                                        break;
+                                }
                             }
                         }
+
+                        thick++;
                     }
                 });
             }
@@ -129,11 +137,13 @@ namespace SpicyInvader.views
             String sentanceHealth = "";
             const int sentanceLongestSize = 6;
 
+
             for (int i = 0; i < lives; i++)
             {
                 sentanceHealth += " ■";
             }
 
+            
             // Show the sentance "Lives"
             Console.SetCursorPosition(Width - (MARGIN) - sentanceLongestSize - sentanceLongestSize, POS_LIVES_Y);
             Console.ForegroundColor = ConsoleColor.White;
@@ -143,6 +153,17 @@ namespace SpicyInvader.views
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(sentanceHealth);
 
+        }
+
+        public void UpdateMenu()
+        {
+            // Reset the lines
+            Console.SetCursorPosition(0, POS_LIVES_Y);
+            ConsoleUtils.ClearCurrentConsoleLine();
+
+            // Display data
+            ShowScore(Presenter.getCurrentScore());
+            ShowLives(Presenter.getCurrentLives());
         }
 
         /// <summary>
@@ -164,9 +185,23 @@ namespace SpicyInvader.views
         {
             foreach (Invader invader in Presenter.GetInvaders())
             {
-                // Draw the ship
+                // Draw the Ship
                 ConsoleUtils.FastDraw(invader.X, invader.Y, invader);
             }
+        }
+
+        public void MoveInvaderMissile(int posX, int posY)
+        {
+            // Draw the Missile
+            Missile missile = Presenter.getCurrentInvaderMissileOwner().GetMissile();
+            ConsoleUtils.FastDraw(posX, posY, missile);
+        }
+
+        public void TempRemoveMissile()
+        {
+            int posX = Presenter.getCurrentInvaderMissileOwner().GetMissile().X;
+            int posY = Presenter.getCurrentInvaderMissileOwner().GetMissile().Y;
+            ConsoleUtils.RemoveChar(posX, posY);
         }
     }
 }

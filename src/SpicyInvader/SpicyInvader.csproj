@@ -56,11 +56,14 @@
     <Compile Include="domain\character\Ship.cs" />
     <Compile Include="domain\character\Squid.cs" />
     <Compile Include="domain\Direction.cs" />
+    <Compile Include="domain\DisplayableObject.cs" />
+    <Compile Include="domain\Engine.cs" />
     <Compile Include="domain\Missile.cs" />
     <Compile Include="models\Level.cs" />
     <Compile Include="models\MenuModel.cs" />
     <Compile Include="models\OptionsModel.cs" />
     <Compile Include="models\PlayModel.cs" />
+    <Compile Include="presenters\listeners\ShootListener.cs" />
     <Compile Include="presenters\MenuPresenter.cs" />
     <Compile Include="presenters\OptionsPresenter.cs" />
     <Compile Include="presenters\PlayPresenter.cs" />

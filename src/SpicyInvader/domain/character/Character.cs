@@ -4,6 +4,7 @@
 // Date : 04.01.2018
 
 
+using SpicyInvader.domain;
 using System;
 using System.Diagnostics;
 
@@ -12,18 +13,16 @@ namespace SpicyInvaders.domain.character
     /// <summary>
     /// Base class for the "Personnages" of the game
     /// </summary>
-    abstract class Character
+    public abstract class Character : DisplayableObject
     {
 
-        public int X { get; set; }       // horizontal position of the character
-        public int Y { get; set; }       // vertical position of the character
         public int SpeedX { get; set; }     // The horizontal speed of the character
         protected int speedY;     // The vertical speed of the character
         protected int size;       
         public bool isAliveState;
         private string name;    // name of the character
         public Camp Camp { get; }      // The group of which the character belong
-        public string Drawing { get; set; }     // ASCIII representing the character (player) 
+        
 
         // Propreties of a shooter
         private bool isShooting;            // determine if the missile moving
@@ -31,7 +30,6 @@ namespace SpicyInvaders.domain.character
 
 
 
-        public ConsoleColor Color { get; set; }         // Color of the character ascii
 
         
         /// <summary>
@@ -59,8 +57,8 @@ namespace SpicyInvaders.domain.character
             isShooting = state;
 
             missile.isMoving = state;
-            missile.SetX(X);
-            missile.SetY(Y - 2);
+            missile.X = X;
+            missile.Y = Y - 2;
         }
 
         /// <summary>

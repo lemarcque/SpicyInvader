@@ -36,7 +36,7 @@ namespace SpicyInvaders
         public const short LIVES = 3;               // The maximum lives of the player
         private const int INTERVAL_INVADER_MISSILE_SHOOT = 1000; // default : 3000
         private static bool invaderMissileMoving;   // Indicates if a ennemies missile is moving
-        Timer timer;
+        private Timer timer;
 
 
         /// <summary>
@@ -61,6 +61,8 @@ namespace SpicyInvaders
             timer.Start();
         }
 
+
+
         /// <summary>
         /// Generate a new missile from the space invader at the same y position of the ship
         /// </summary>
@@ -71,10 +73,10 @@ namespace SpicyInvaders
 
             List<Invader> invaders = GetInvadersAtRow(GetCloserInvadersRow());
 
-            foreach(Invader invader in invaders)
+            foreach (Invader invader in invaders)
             {
                 // verify that the invader is "alive"
-                if(invader.IsAlive)
+                if (invader.IsAlive)
                 {
                     // Verify that no other invader's missile are moving
                     if (!invaderMissileMoving)

@@ -3,15 +3,14 @@
 // Lieu : ETML - Lausanne
 // Date : 04.01.2018
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpicyInvaders
 {
-    enum Direction
+
+    /// <summary>
+    /// Define a set of direction for the moving of the character on screen.
+    /// </summary>
+    public enum Direction
     {
         Left,
         Right,

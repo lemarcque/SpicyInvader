@@ -3,7 +3,9 @@
 // Lieu : ETML - Lausanne
 // Date : 04.01.2019
 
+using SpicyInvader.domain;
 using SpicyInvader.models;
+using SpicyInvader.presenters.listeners;
 using SpicyInvader.views;
 using SpicyInvader.views.utils;
 using SpicyInvaders;
@@ -17,11 +19,14 @@ using System.Threading.Tasks;
 
 namespace SpicyInvader.presenters
 {
-    class PlayPresenter : Presenter
+    class PlayPresenter : Presenter, ShootListener
     {
 
         private PlayView View;          // View attached to the Presenter
         private PlayModel Model;        // Model attached to the Presenter
+
+        // Business Logic
+        private Engine engine;
 
         public PlayPresenter(View view, Model model)
         {
@@ -37,6 +42,10 @@ namespace SpicyInvader.presenters
 
         private void Initialization()
         {
+
+            // Initialiation of the Businss Logic's object
+            engine = new Engine(Model, this);
+
             View.ShowLives(Model.Lives);
             View.ShowScore(Model.Score);
 
@@ -87,6 +96,15 @@ namespace SpicyInvader.presenters
         }
 
         /// <summary>
+        /// Return the invader that has shooting the last missile.
+        /// </summary>
+        /// <returns></returns>
+        public Invader getCurrentInvaderMissileOwner()
+        {
+            return Model.CurrentInvaderMissileOwner;
+        }
+
+        /// <summary>
         /// Creation of Invader's object
         /// They will be displayed in a range of n ennemies
         /// </summary>
@@ -94,9 +112,10 @@ namespace SpicyInvader.presenters
         {
 
             int maxInvaderMove;     // The maximum number of times invaders can move, is the screenwidth - width of invaders'bloc size
-            int row = 6;                                                  // The number of row of invaders       (default : 5)                     
-            int column = 10;                                              // The number of column of invaders    (default : 10)
-            //int currentCloserRow = nRow;                                        // The row which ship are closer
+            int row = Engine.MAX_ROW_INVADERS;                                                  // The number of row of invaders       (default : 6)                     
+            int column = Engine.MAX_COLUMN_INVADERS;                                              // The number of column of invaders    (default : 10)
+            engine.CurrentCloserRow = row;                                        // The row which ship are closer
+
             const short SPACE_BETWEEN_INVADER = 3;                          // the space that is between the ennemies displayed
             maxInvaderMove = Program.Width - (column * SPACE_BETWEEN_INVADER);
 
@@ -146,6 +165,27 @@ namespace SpicyInvader.presenters
                     View.ShowShip();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Callback to prevent that an invader has shoot
+        /// </summary>
+        /// <param name="invader"></param>
+        public void OnShoot()
+        {
+            int posX = Model.CurrentInvaderMissileOwner.GetMissile().X;
+            int posY = Model.CurrentInvaderMissileOwner.GetMissile().Y;
+            View.MoveInvaderMissile(posX, posY);
+        }
+
+        public void TempRemoveMissile()
+        {
+            View.TempRemoveMissile();
+        }
+
+        public void UpdateLives()
+        {
+            View.UpdateMenu();
         }
     }
 }

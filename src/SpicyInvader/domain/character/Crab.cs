@@ -28,7 +28,7 @@ namespace SpicyInvaders.domain.character
         public virtual void shoot(bool state)
         {
             base.Shoot(state);
-            missile.SetY(GetY() + 2);
+            missile.Y = (Y + 2);
         }
     }
 }
