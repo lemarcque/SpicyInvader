@@ -17,7 +17,7 @@ namespace SpicyInvaders.domain.character
 
         public int X { get; set; }       // horizontal position of the character
         public int Y { get; set; }       // vertical position of the character
-        protected int speedX;     // The horizontal speed of the character
+        public int SpeedX { get; set; }     // The horizontal speed of the character
         protected int speedY;     // The vertical speed of the character
         protected int size;       
         public bool isAliveState;
@@ -42,7 +42,7 @@ namespace SpicyInvaders.domain.character
         {
             // initialization
             isAliveState = true;
-            speedX = 1;
+            SpeedX = 1;
             speedY = 1;
             Drawing = "█";
             missile = new Missile(this);

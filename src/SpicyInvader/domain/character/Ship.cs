@@ -10,6 +10,7 @@ namespace SpicyInvaders.domain.character
     class Ship : Character
     {
 
+        public bool isDisplayed;      // Indicates if the character is displayed on screen
 
         public Ship():base(Camp.Allied)
         {

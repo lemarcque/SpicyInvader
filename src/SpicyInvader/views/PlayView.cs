@@ -5,8 +5,11 @@
 
 using SpicyInvader.presenters;
 using SpicyInvader.views.utils;
+using SpicyInvaders;
 using SpicyInvaders.domain.character;
 using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace SpicyInvader.views
 {
@@ -31,13 +34,16 @@ namespace SpicyInvader.views
         private static int POS_LIVES_X = 0;
         private static int POS_LIVES_Y = 2;
 
-        public override void onCreate(ScreenInfo screenInfo)
+
+        /// <summary>
+        /// The view is displayed on the screen and ready to be manipulated.
+        /// </summary>
+        public override void onResume()
         {
-            base.onCreate(screenInfo);
+            base.onResume();
 
-            // Temp : testing
-
-            Console.Read();
+            // Management of keyboard press event
+            this.keyboardEventHandler();
         }
 
         /// <summary>
@@ -52,10 +58,54 @@ namespace SpicyInvader.views
         }
 
         /// <summary>
+        /// Handle keyboard press event safely
+        /// </summary>
+        private void keyboardEventHandler()
+        {
+            if (eventThread == null)
+            {
+                // Create a new Thread
+                eventThread = new Thread(() =>
+                {
+                    while (State == configs.LifecycleState.RESUME)
+                    {
+                        if (Console.KeyAvailable)
+                        {
+                            ConsoleKeyInfo key = Console.ReadKey(true);
+
+                            switch (key.Key)
+                            {
+                                case ConsoleKey.LeftArrow:
+                                    Presenter.moveShip(Direction.Left);
+                                    break;
+
+                                case ConsoleKey.RightArrow:
+                                    Presenter.moveShip(Direction.Right);
+                                    break;
+
+                                case ConsoleKey.Spacebar:
+                                    // Todo : ...
+
+                                    break;
+
+                                case ConsoleKey.Escape:
+                                    Program.Finish(this);
+                                    break;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Start the thread
+            eventThread.Start();
+        }
+
+        /// <summary>
         /// Change the score in the menu's interface
         /// </summary>
         /// <param name="score"> the current score of the game</param>
-        public void showScore(int score)
+        public void ShowScore(int score)
         {
             const String sentanceScore = "Score ";
             Console.SetCursorPosition(POS_SCORE_X, POS_SCORE_Y);
@@ -73,7 +123,7 @@ namespace SpicyInvader.views
         /// Change the score in the menu's interface
         /// </summary>
         /// <param name="lives"></param>
-        public void showLives(int lives)
+        public void ShowLives(int lives)
         {
             const String sentanceLives = "Lives";
             String sentanceHealth = "";
@@ -100,6 +150,7 @@ namespace SpicyInvader.views
         /// </summary>
         public void ShowShip()
         {
+
             // Draw the ship
             int posX = Presenter.GetShip().GetX();
             int posY = Presenter.GetShip().GetY();

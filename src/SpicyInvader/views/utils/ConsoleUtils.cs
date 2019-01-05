@@ -66,5 +66,22 @@ namespace SpicyInvader.views.utils
             // reset the console cursor at his position
             ConsoleUtils.ResetCursorPosition(cursorPos);
         }
+
+        /// <summary>
+        /// Delete a writed character at the specified position
+        /// </summary>
+        /// <param name="posX"></param>
+        /// <param name="posY"></param>
+        public static void RemoveChar(int posX, int posY)
+        {
+            // Save console's cursor position
+            CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
+
+            Console.SetCursorPosition(posX, posY);
+            Console.Write(Char.SPACE);
+
+            // reset the console cursor at his position
+            ConsoleUtils.ResetCursorPosition(cursorPos);
+        }
     }
 }

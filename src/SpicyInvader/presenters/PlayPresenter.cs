@@ -5,9 +5,12 @@
 
 using SpicyInvader.models;
 using SpicyInvader.views;
+using SpicyInvader.views.utils;
+using SpicyInvaders;
 using SpicyInvaders.domain.character;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,8 +37,8 @@ namespace SpicyInvader.presenters
 
         private void Initialization()
         {
-            View.showLives(Model.Lives);
-            View.showScore(Model.Score);
+            View.ShowLives(Model.Lives);
+            View.ShowScore(Model.Score);
 
             // Display the Ship
             View.ShowShip();
@@ -112,6 +115,36 @@ namespace SpicyInvader.presenters
                     crab.Column = y + 1;
                     Model.Invaders.Add(crab);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Move the player's Ship
+        /// </summary>
+        /// <param name="direction"></param>
+        public void moveShip(Direction direction)
+        {
+            switch(direction)
+            {
+                case Direction.Left:
+                    if (Model.Ship.X - Model.Ship.SpeedX > 0)
+                    {
+                        ConsoleUtils.RemoveChar(Model.Ship.X, Model.Ship.Y);
+                        Model.Ship.X -= Model.Ship.SpeedX;
+                    }
+                    
+                    View.ShowShip();
+                    break;
+
+                case Direction.Right:
+                    if (Model.Ship.X + Model.Ship.SpeedX < Program.Width)
+                    {
+                        ConsoleUtils.RemoveChar(Model.Ship.X, Model.Ship.Y);
+                        Model.Ship.X += Model.Ship.SpeedX;
+                    }
+                    
+                    View.ShowShip();
+                    break;
             }
         }
     }
