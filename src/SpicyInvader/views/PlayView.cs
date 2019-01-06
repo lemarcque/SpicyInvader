@@ -8,7 +8,6 @@ using SpicyInvader.views.utils;
 using SpicyInvaders;
 using SpicyInvaders.domain.character;
 using System;
-using System.Diagnostics;
 using System.Threading;
 
 namespace SpicyInvader.views
@@ -22,6 +21,7 @@ namespace SpicyInvader.views
 
 
         public PlayPresenter Presenter { get; set; }    // Reference of the Presenter
+        private static readonly object ConsoleWriterLock = new object();
 
         // Margin of the screen
         private static int MARGIN = 5;
@@ -89,7 +89,7 @@ namespace SpicyInvader.views
                                         break;
 
                                     case ConsoleKey.Spacebar:
-                                        
+                                        Presenter.ShipShooting();
                                         break;
 
                                     case ConsoleKey.Escape:
@@ -114,16 +114,19 @@ namespace SpicyInvader.views
         /// <param name="score"> the current score of the game</param>
         public void ShowScore(int score)
         {
-            const String sentanceScore = "Score ";
-            Console.SetCursorPosition(POS_SCORE_X, POS_SCORE_Y);
+            lock (ConsoleWriterLock)
+            {
+                const String sentanceScore = "Score ";
+                Console.SetCursorPosition(POS_SCORE_X, POS_SCORE_Y);
 
-            // Show the sentance "Score"
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(sentanceScore);
+                // Show the sentance "Score"
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(sentanceScore);
 
-            // Sow the current score
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(score);
+                // Sow the current score
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(score);
+            }
         }
 
         /// <summary>
@@ -132,37 +135,41 @@ namespace SpicyInvader.views
         /// <param name="lives"></param>
         public void ShowLives(int lives)
         {
-            const String sentanceLives = "Lives";
-            String sentanceHealth = "";
-            const int sentanceLongestSize = 6;
-
-
-            for (int i = 0; i < lives; i++)
+            lock (ConsoleWriterLock)
             {
-                sentanceHealth += " ■";
+                const String sentanceLives = "Lives";
+                String sentanceHealth = "";
+                const int sentanceLongestSize = 6;
+
+                for (int i = 0; i < lives; i++)
+                {
+                    sentanceHealth += " ■";
+                }
+
+                // Show the sentance "Lives"
+                Console.SetCursorPosition(Width - (MARGIN) - sentanceLongestSize - sentanceLongestSize, POS_LIVES_Y);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(sentanceLives);
+
+                // Show the health
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(sentanceHealth);
             }
-
-            
-            // Show the sentance "Lives"
-            Console.SetCursorPosition(Width - (MARGIN) - sentanceLongestSize - sentanceLongestSize, POS_LIVES_Y);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(sentanceLives);
-
-            // Show the health
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(sentanceHealth);
-
         }
 
         public void UpdateMenu()
         {
-            // Reset the lines
-            Console.SetCursorPosition(0, POS_LIVES_Y);
-            ConsoleUtils.ClearCurrentConsoleLine();
+            lock(ConsoleWriterLock)
+            {
+                // Reset the lines
+                Console.SetCursorPosition(0, POS_LIVES_Y);
+                ConsoleUtils.ClearCurrentConsoleLine();
 
-            // Display data
-            ShowScore(Presenter.getCurrentScore());
-            ShowLives(Presenter.getCurrentLives());
+                // Display data
+                ShowScore(Presenter.getCurrentScore());
+                ShowLives(Presenter.getCurrentLives());
+            }
+            
         }
 
         /// <summary>
@@ -196,11 +203,60 @@ namespace SpicyInvader.views
             ConsoleUtils.FastDraw(posX, posY, missile);
         }
 
+        /// <summary>
+        /// Remove the missile displayed to redraw in another position.
+        /// </summary>
         public void TempRemoveMissile()
         {
             int posX = Presenter.getCurrentInvaderMissileOwner().GetMissile().X;
             int posY = Presenter.getCurrentInvaderMissileOwner().GetMissile().Y;
             ConsoleUtils.RemoveChar(posX, posY);
+        }
+
+        /// <summary>
+        /// Change the position of the missile of the Ship
+        /// </summary>
+        public void MoveShipMissile()
+        {
+            // Draw the Missile
+            Missile missile = Presenter.GetShip().GetMissile();
+            ConsoleUtils.FastDraw(missile.X, missile.Y, missile);
+        }
+
+        public void AnimateInvaderKilling(Invader invader)
+        {
+            const char CHAR_EMPTY = ' ';
+
+            lock (ConsoleWriterLock)
+            {
+                // Animation of the destruction
+                for (int count = 0; count < 6; count++)
+                {
+                    // pause the thread
+                    Thread.Sleep(50);
+
+                    if (count % 2 == 0)
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    else
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+
+                    // Rewrite the position
+                    Console.SetCursorPosition(invader.X, invader.Y);
+                    Console.Write(invader.Drawing);
+                }
+
+                // Erasing the ennemy displayed on screen)
+                Console.SetCursorPosition(invader.X, invader.Y);
+                Console.Write(CHAR_EMPTY);
+            }
+        }
+
+        /// <summary>
+        /// Called when the game is finished.
+        /// </summary>
+        public void OnGameOver()
+        {
+            Program.Navigate(new GameOverView());
         }
     }
 }

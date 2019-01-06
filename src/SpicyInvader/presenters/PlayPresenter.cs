@@ -176,14 +176,47 @@ namespace SpicyInvader.presenters
             View.MoveInvaderMissile(posX, posY);
         }
 
+        /// <summary>
+        /// Prevent that the Allied Ship is shooting
+        /// </summary>
+        public void ShipShooting()
+        {
+            engine.ShipShooting();
+        }
+
         public void TempRemoveMissile()
         {
             View.TempRemoveMissile();
         }
 
-        public void UpdateLives()
+        public void UpdateMenu()
         {
             View.UpdateMenu();
+        }
+
+        /// <summary>
+        /// Call the View's the position of the missile's ship
+        /// </summary>
+        public void UpdateShipPosition()
+        {
+            View.MoveShipMissile();
+        }
+
+        /// <summary>
+        /// Animation of the Invader
+        /// </summary>
+        public void OnInvaderKilled(Invader invader)
+        {
+            View.AnimateInvaderKilling(invader);
+        }
+
+        /// <summary>
+        /// Called when the game is over.
+        /// </summary>
+        public void GameOver()
+        {
+            engine.Stop();
+            View.OnGameOver();
         }
     }
 }

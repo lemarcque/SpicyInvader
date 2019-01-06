@@ -10,7 +10,6 @@ using SpicyInvaders;
 using SpicyInvaders.domain.character;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Timers;
 
 namespace SpicyInvader.domain
@@ -23,21 +22,27 @@ namespace SpicyInvader.domain
         public static int MAX_COLUMN_INVADERS = 10;             // The number of column of invaders       (default : 10)                     
         public static int MAX_INVADER_MOVE;     // The maximum number of times invaders can move, is the screenwidth - width of invaders'bloc size
         public const short SPACE_BETWEEN_INVADER = 3;                          // the space that is between the ennemies displayed
+        private const short LIMIT_MISSILE_DESTROY = 0;                          // The limit where a missile can still be drawed on screen
 
         private const int SHOOTING_RANGE = 10;                           // The field of view of the invader to make a shoot
         private const int INTERVAL_INVADER_MISSILE_SHOOT = 1000; // default : 3000
 
         // Variable
+        private bool gameOver;
         private bool invaderMissileMoving;               // Indicates if a ennemies missile is moving
         public int CurrentCloserRow { get; set; }                 // The row which ship are closer
         private PlayModel Model;                                // Reference of the model
-        private Random randInvader;                      // Random object to choose a invader that wil shoot
+        
         private ShootListener shootListener;                    // Listener
 
-        private int currentMoveCount;        // Count the number of times invaders moved
-        private Direction currentMoveSens;  // The sens ( <- left or right -> ) where the invaders are going
-        private bool isInvaderTransitioning;
+        private int currentMoveCount;                   // Count the number of times invaders moved
+        private Direction currentMoveSens;              // The sens ( <- left or right -> ) where the invaders are going
 
+        private Random randInvader;                      // Random object to choose a invader that wil shoot
+        private Timer timerInvadersMissile;              // Timer for moving invader's missile
+        private Timer timerShipMissile;                 // Timer for moving missile of Allied Ship
+        private Timer timerMovingInvaders;
+        private bool isInvaderTransitioning;
 
         public Engine(Model model, ShootListener listener)
         {
@@ -50,15 +55,84 @@ namespace SpicyInvader.domain
             currentMoveCount = 0;
             currentMoveSens = Direction.Right;
 
-            Timer timerInvaders = new System.Timers.Timer(700);
-            timerInvaders.Elapsed += new ElapsedEventHandler(OnMoveInvaders);
-            timerInvaders.Start();
-
+            // Timer for moving invaders
+            timerMovingInvaders = new System.Timers.Timer(700);
+            timerMovingInvaders.Elapsed += new ElapsedEventHandler(OnMoveInvaders);
+            timerMovingInvaders.Start();
 
             // creation of a timer for generating missile from invaders
-            Timer timer = new System.Timers.Timer(INTERVAL_INVADER_MISSILE_SHOOT);
-            timer.Elapsed += new ElapsedEventHandler(OnGenerateMissile);
-            timer.Start();
+            timerInvadersMissile = new System.Timers.Timer(INTERVAL_INVADER_MISSILE_SHOOT);
+            timerInvadersMissile.Elapsed += new ElapsedEventHandler(OnGenerateMissile);
+            timerInvadersMissile.Start();
+        }
+
+        public void Stop()
+        {
+            timerInvadersMissile.Stop();
+            timerMovingInvaders.Stop();
+            gameOver = true;
+        }
+
+        /// <summary>
+        /// Start the operating of shooting from the Allied Ship.
+        /// </summary>
+        public void ShipShooting()
+        {
+            if(!Model.Ship.GetMissile().isMoving)
+            {
+                Model.Ship.Shoot(true);
+
+                // creation of a timer for generating missile from invaders
+                timerShipMissile = new System.Timers.Timer(75);
+                timerShipMissile.Elapsed += new ElapsedEventHandler(OnMoveShipMissile);
+                timerShipMissile.Start();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for moving the missile of the Allied Ship.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void OnMoveShipMissile(object source, ElapsedEventArgs e)
+        {
+            // Remove the missile from screen
+            Missile missile = Model.Ship.GetMissile();
+            ConsoleUtils.RemoveChar(missile.X, missile.Y);
+            //shootListener.TempRemoveMissile();
+
+            // Move the missile
+            missile.Move(Direction.Up);
+
+            // Check if the missile goes outside the limits of the console size
+            if (missile.Y < LIMIT_MISSILE_DESTROY)
+            {
+                Model.Ship.Shoot(false);
+                timerShipMissile.Stop();
+            }else
+            {
+                if(Model.Ship.GetMissile().isMoving)
+                {
+                    // Collision management
+                    DisplayableObject[] invaderAlive = this.getInvadersAlive().ToArray();
+                    Invader invader = (Invader) CollisionObjectsHitBox(missile, invaderAlive);
+                    if (invader != null)
+                    {
+                        timerShipMissile.Stop();
+                        Model.Ship.Shoot(false);
+                        invader.Kill();
+                        shootListener.OnInvaderKilled(invader);
+
+                        Model.Score += invader.GetScoreGain();
+                        shootListener.UpdateMenu();
+                    }
+                    else
+                    {
+                        // Callback Listener
+                        shootListener.UpdateShipPosition();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -85,7 +159,7 @@ namespace SpicyInvader.domain
 
                             Model.CurrentInvaderMissileOwner = invaders[pos];
                             shootListener.OnShoot();
-                            OnMoveMissile();
+                            onMoveInvadersMissile();
                         }
                         break;
                     }
@@ -131,26 +205,22 @@ namespace SpicyInvader.domain
             // Affecting the new position of invaders -----------------------------------------------------------
             foreach (Invader invader in Model.Invaders)
             {
-                if (!invader.IsKilled)
+                if (invader.IsAlive)
                 {
                     if (CollisionHitBox(Model.Ship, invader))
                     {
-                        //game.SetLives(0);
-                        //game.Finish();
+                        Model.Lives = 0;
+                        shootListener.UpdateMenu();
+                        shootListener.GameOver();
 
-                        // STOP THE GAME
-                        Debug.WriteLine("Stop the game");
                     }
                     else
                     {
                         // erasing the last character
                         ConsoleUtils.RemoveChar(invader.X, invader.Y);
 
-                        Debug.WriteLine("  1 :" + sens);
-
                         // Changing 
                         invader.Move(sens);
-
 
                         // drawing the new character
                         ConsoleUtils.FastDraw(invader.X, invader.Y, invader);
@@ -159,20 +229,29 @@ namespace SpicyInvader.domain
             }
         }
 
-        private void OnMoveMissile()
+        private void onMoveInvadersMissile()
         {
             System.Timers.Timer timer = new System.Timers.Timer(75);
             timer.Elapsed += new ElapsedEventHandler((object source, ElapsedEventArgs e) => {
                 Missile missile = Model.CurrentInvaderMissileOwner.GetMissile();
-                if(missile.Y + 1 < Program.Height)
+                if(missile.Y + 1 < Program.Height && !gameOver)
                 {
+                    // Remove the missile from screen
                     shootListener.TempRemoveMissile();
+
+                    // Move the missile
                     missile.Move(Direction.Down);
 
                     // Collision management
                     if(CollisionHitBox(missile, Model.Ship)) {
                         Model.Lives--;
-                        shootListener.UpdateLives();
+                        shootListener.UpdateMenu();
+
+                        if(Model.Lives == 0)
+                        {
+                            // Prevent for the end of the game
+                            shootListener.GameOver();
+                        }
                     }
 
                     // Callback Listener
@@ -186,6 +265,23 @@ namespace SpicyInvader.domain
                 
             });
             timer.Start();
+        }
+
+        /// <summary>
+        /// Check collision between a DisplayableObject and a set of Displayable object
+        /// </summary>
+        /// <param name="d1"></param>
+        /// <param name="dSet"></param>
+        /// <returns></returns>
+        private DisplayableObject CollisionObjectsHitBox(DisplayableObject d1, DisplayableObject[] dSet)
+        {
+            foreach(DisplayableObject d2 in dSet)
+            {
+                if (CollisionHitBox(d1, d2))
+                    return d2;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -241,6 +337,25 @@ namespace SpicyInvader.domain
             }
 
             return CurrentCloserRow;
+        }
+
+        /// <summary>
+        /// Return a List of Invaders still alive.
+        /// </summary>
+        /// <returns></returns>
+        public List<Invader> getInvadersAlive()
+        {
+            List<Invader> invaders = new List<Invader>();
+
+            foreach (Invader invader in Model.Invaders)
+            {
+                if (invader.IsAlive)
+                {
+                    invaders.Add(invader);
+                }
+            }
+
+            return invaders;
         }
     }
 }

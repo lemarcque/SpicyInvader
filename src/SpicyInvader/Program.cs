@@ -65,6 +65,14 @@ namespace SpicyInvader
             Console.CursorVisible = false;
         }
 
+        /// <summary>
+        /// Stop/Quit the program.
+        /// </summary>
+        public static void Exit()
+        {
+            Environment.Exit(0);
+        }
+
         public static void Navigate(View view)
         {
             

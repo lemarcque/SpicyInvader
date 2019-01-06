@@ -39,14 +39,26 @@ namespace SpicyInvaders
         {
             int sens = 1;
 
-            if (direction == Direction.Down)
+            switch(direction)
             {
-                Y += sens * SPEED;
+                case Direction.Down:
+                    Y += sens * SPEED;
+                    break;
+
+                case Direction.Up:
+                    Y -= sens * SPEED;
+                    break;
             }
-            else
-            {
-                Y -= sens * SPEED;
-            }
+
+        }
+
+        /// <summary>
+        /// Return the constant speed of the missile (no acceleration)
+        /// </summary>
+        /// <returns></returns>
+        public int GetSpeed()
+        {
+            return SPEED;
         }
     }
 }

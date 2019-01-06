@@ -21,6 +21,12 @@ namespace SpicyInvader.presenters.listeners
 
         void TempRemoveMissile();
 
-        void UpdateLives();
+        void UpdateMenu();
+
+        void UpdateShipPosition();
+
+        void OnInvaderKilled(Invader invader);
+
+        void GameOver();
     }
 }

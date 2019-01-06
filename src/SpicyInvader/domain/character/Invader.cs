@@ -22,7 +22,9 @@ namespace SpicyInvaders.domain.character
         public bool IsKilled { get => isKilled; set => isKilled = value; }
         public int Column { get => column; set => column = value; }
         public int Row { get => row; set => row = value; }
-        
+
+        private static readonly object ConsoleWriterLock = new object();
+
         public Invader():base(character.Camp.Invader)
         {
 
@@ -42,29 +44,7 @@ namespace SpicyInvaders.domain.character
         /// </summary>
         public void Kill()
         {
-            isKilled = true;
-            const char CHAR_EMPTY = ' ';
-
-
-            // Animation of the destruction
-            for (int count = 0; count < 6; count++)
-            {
-                // pause the thread
-                Thread.Sleep(50);
-
-                if (count % 2 == 0)
-                    Console.ForegroundColor = ConsoleColor.Black;
-                else
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-
-                // Rewrite the position
-                Console.SetCursorPosition(GetX(), GetY());
-                Console.Write(Drawing);
-            }
-
-            // Erasing the ennemy displayed on screen)
-            Console.SetCursorPosition(GetX(), GetY());
-            Console.Write(CHAR_EMPTY);
+            IsAlive = false;
         }
     }
 }
