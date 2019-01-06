@@ -5,15 +5,12 @@
 
 using SpicyInvader.models;
 using SpicyInvader.presenters.listeners;
+using SpicyInvader.views.utils;
 using SpicyInvaders;
 using SpicyInvaders.domain.character;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace SpicyInvader.domain
@@ -24,6 +21,9 @@ namespace SpicyInvader.domain
         // Constant
         public static int MAX_ROW_INVADERS = 6;                 // The number of row of invaders       (default : 6)                     
         public static int MAX_COLUMN_INVADERS = 10;             // The number of column of invaders       (default : 10)                     
+        public static int MAX_INVADER_MOVE;     // The maximum number of times invaders can move, is the screenwidth - width of invaders'bloc size
+        public const short SPACE_BETWEEN_INVADER = 3;                          // the space that is between the ennemies displayed
+
         private const int SHOOTING_RANGE = 10;                           // The field of view of the invader to make a shoot
         private const int INTERVAL_INVADER_MISSILE_SHOOT = 1000; // default : 3000
 
@@ -34,6 +34,10 @@ namespace SpicyInvader.domain
         private Random randInvader;                      // Random object to choose a invader that wil shoot
         private ShootListener shootListener;                    // Listener
 
+        private int currentMoveCount;        // Count the number of times invaders moved
+        private Direction currentMoveSens;  // The sens ( <- left or right -> ) where the invaders are going
+        private bool isInvaderTransitioning;
+
 
         public Engine(Model model, ShootListener listener)
         {
@@ -43,16 +47,19 @@ namespace SpicyInvader.domain
 
             randInvader = new Random();
 
+            currentMoveCount = 0;
+            currentMoveSens = Direction.Right;
+
+            Timer timerInvaders = new System.Timers.Timer(700);
+            timerInvaders.Elapsed += new ElapsedEventHandler(OnMoveInvaders);
+            timerInvaders.Start();
+
+
             // creation of a timer for generating missile from invaders
-            System.Timers.Timer timer = new System.Timers.Timer(INTERVAL_INVADER_MISSILE_SHOOT);
+            Timer timer = new System.Timers.Timer(INTERVAL_INVADER_MISSILE_SHOOT);
             timer.Elapsed += new ElapsedEventHandler(OnGenerateMissile);
             timer.Start();
-
-            
         }
-
-
-
 
         /// <summary>
         /// Generate a new missile from the space invader at the same y position of the ship
@@ -73,8 +80,6 @@ namespace SpicyInvader.domain
                     {
                         if (invaders[pos].X >= Model.Ship.X - SHOOTING_RANGE && invaders[pos].X <= Model.Ship.X + SHOOTING_RANGE)
                         {
-                            
-
                             invaderMissileMoving = true;
                             invaders[pos].Shoot(true);
 
@@ -90,11 +95,73 @@ namespace SpicyInvader.domain
                     break;
                 }
             }
+            
+        }
+
+        private void OnMoveInvaders(object source, ElapsedEventArgs e)
+        {
+            // Déplacement des ennemies
+            // Change the position of invaders
+
+            Direction sens = currentMoveSens;                     // sens of the moving (left or right)
+
+            // Settings the sens of the invaders -----------------------------------------------------------
+            // if the number of movement is lower than the maximum, we enable movement
+            if (currentMoveCount < MAX_INVADER_MOVE)
+            {
+                currentMoveCount++;
+            }
+            else
+            {
+                // on descend en bas
+                if (!isInvaderTransitioning)
+                {
+                    isInvaderTransitioning = true;
+                    currentMoveSens = (currentMoveSens == Direction.Right) ? Direction.Left : Direction.Right;
+                    sens = Direction.Down;
+                }
+                // On continue dans l'autre sens
+                else
+                {
+                    isInvaderTransitioning = false;
+                    currentMoveCount = 0;
+                }
+            }
+
+            // Affecting the new position of invaders -----------------------------------------------------------
+            foreach (Invader invader in Model.Invaders)
+            {
+                if (!invader.IsKilled)
+                {
+                    if (CollisionHitBox(Model.Ship, invader))
+                    {
+                        //game.SetLives(0);
+                        //game.Finish();
+
+                        // STOP THE GAME
+                        Debug.WriteLine("Stop the game");
+                    }
+                    else
+                    {
+                        // erasing the last character
+                        ConsoleUtils.RemoveChar(invader.X, invader.Y);
+
+                        Debug.WriteLine("  1 :" + sens);
+
+                        // Changing 
+                        invader.Move(sens);
+
+
+                        // drawing the new character
+                        ConsoleUtils.FastDraw(invader.X, invader.Y, invader);
+                    }
+                }
+            }
         }
 
         private void OnMoveMissile()
         {
-            System.Timers.Timer timer = new System.Timers.Timer(200);
+            System.Timers.Timer timer = new System.Timers.Timer(75);
             timer.Elapsed += new ElapsedEventHandler((object source, ElapsedEventArgs e) => {
                 Missile missile = Model.CurrentInvaderMissileOwner.GetMissile();
                 if(missile.Y + 1 < Program.Height)
@@ -104,7 +171,6 @@ namespace SpicyInvader.domain
 
                     // Collision management
                     if(CollisionHitBox(missile, Model.Ship)) {
-                        Debug.WriteLine("Collision !! ");
                         Model.Lives--;
                         shootListener.UpdateLives();
                     }
@@ -154,7 +220,6 @@ namespace SpicyInvader.domain
                     invaders.Add(invader);
                 }
             }
-
 
             return invaders;
         }

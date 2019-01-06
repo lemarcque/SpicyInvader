@@ -89,8 +89,7 @@ namespace SpicyInvader.views
                                         break;
 
                                     case ConsoleKey.Spacebar:
-                                        // Todo : ...
-
+                                        
                                         break;
 
                                     case ConsoleKey.Escape:

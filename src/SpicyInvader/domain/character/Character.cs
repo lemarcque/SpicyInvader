@@ -4,6 +4,7 @@
 // Date : 04.01.2018
 
 
+using SpicyInvader;
 using SpicyInvader.domain;
 using System;
 using System.Diagnostics;
@@ -145,36 +146,36 @@ namespace SpicyInvaders.domain.character
 
         public void Move(Direction direction)
         {
-            /*switch(direction)
+            switch(direction)
             {
                 case Direction.Left:
                 {
-                    if (posX - speedX >= 0)
-                        this.posX -= speedX;
+                    if (X - SpeedX >= 0)
+                        this.X -= SpeedX;
                     break;
                 }
                 
                 case Direction.Right:
                 {
-                    if (posX + speedX < environment.GetWidth())
-                        this.posX += speedX;
+                    if (X + SpeedX < Program.Width)
+                        this.X += SpeedX;
                     break;
                 }
                    
                 case Direction.Up:
                 {
-                    if (posY - speedY > 0)
-                        this.posY += speedY;
+                    if (Y - speedY > 0)
+                        this.Y += speedY;
                     break;
                 }
                     
                 case Direction.Down:
                     {
-                        if (posY + speedY < environment.GetHeight())
-                            this.posY += speedY;
+                        if (Y + speedY < Program.Height)
+                            this.Y += speedY;
                         break;
                     }
-            }*/
+            }
         }
 
         public bool OnCollision(Character p2)

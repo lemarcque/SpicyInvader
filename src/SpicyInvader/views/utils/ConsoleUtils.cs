@@ -15,19 +15,24 @@ namespace SpicyInvader.views.utils
     class ConsoleUtils
     {
 
+        private static readonly object ConsoleWriterLock = new object();
+
         /// <summary>
         /// Clear all a specific lines instead of whole the console content.
         /// </summary>
         public static void ClearCurrentConsoleLine()
         {
-            int currentLineCursor = Console.CursorTop;
-            int currentColumnCursor = Console.CursorLeft;
+            lock (ConsoleWriterLock)
+            {
+                int currentLineCursor = Console.CursorTop;
+                int currentColumnCursor = Console.CursorLeft;
 
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write(new string(' ', Console.WindowWidth));
 
-            Console.SetCursorPosition(currentColumnCursor, currentLineCursor);
-            //Console.SetCursorPosition(0, currentLineCursor);
+                Console.SetCursorPosition(currentColumnCursor, currentLineCursor);
+                //Console.SetCursorPosition(0, currentLineCursor);
+            }
         }
 
         /// <summary>
@@ -56,16 +61,19 @@ namespace SpicyInvader.views.utils
         /// <param name="asciiChar">An ASCII character</param>
         public static void FastDraw(int posX, int posY, DisplayableObject displayableObject)
         {
-            // Save console's cursor position
-            CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
+            lock(ConsoleWriterLock)
+            {
+                // Save console's cursor position
+                CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
 
-            // Draw the character
-            Console.ForegroundColor = displayableObject.Color;
-            Console.SetCursorPosition(posX, posY);
-            Console.Write(displayableObject);
+                // Draw the character
+                Console.ForegroundColor = displayableObject.Color;
+                Console.SetCursorPosition(posX, posY);
+                Console.Write(displayableObject);
 
-            // reset the console cursor at his position
-            ConsoleUtils.ResetCursorPosition(cursorPos);
+                // reset the console cursor at his position
+                ConsoleUtils.ResetCursorPosition(cursorPos);
+            }
         }
 
         /// <summary>
@@ -75,14 +83,17 @@ namespace SpicyInvader.views.utils
         /// <param name="posY"></param>
         public static void RemoveChar(int posX, int posY)
         {
-            // Save console's cursor position
-            CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
+            lock (ConsoleWriterLock)
+            {
+                // Save console's cursor position
+                CursorPosition cursorPos = ConsoleUtils.SnapCursorPosition();
 
-            Console.SetCursorPosition(posX, posY);
-            Console.Write(Char.SPACE);
+                Console.SetCursorPosition(posX, posY);
+                Console.Write(Char.SPACE);
 
-            // reset the console cursor at his position
-            ConsoleUtils.ResetCursorPosition(cursorPos);
+                // reset the console cursor at his position
+                ConsoleUtils.ResetCursorPosition(cursorPos);
+            }
         }
     }
 }

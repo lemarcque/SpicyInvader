@@ -111,13 +111,11 @@ namespace SpicyInvader.presenters
         private void CreateInvaders()
         {
 
-            int maxInvaderMove;     // The maximum number of times invaders can move, is the screenwidth - width of invaders'bloc size
             int row = Engine.MAX_ROW_INVADERS;                                                  // The number of row of invaders       (default : 6)                     
             int column = Engine.MAX_COLUMN_INVADERS;                                              // The number of column of invaders    (default : 10)
             engine.CurrentCloserRow = row;                                        // The row which ship are closer
 
-            const short SPACE_BETWEEN_INVADER = 3;                          // the space that is between the ennemies displayed
-            maxInvaderMove = Program.Width - (column * SPACE_BETWEEN_INVADER);
+            Engine.MAX_INVADER_MOVE = Program.Width - (column * Engine.SPACE_BETWEEN_INVADER);
 
             int basePositionX = 1;//((width / 2) - (nRow + SPACE_BETWEEN_INVADER)); // position  horizontale de base du bloc d'invaders default : 1 or 2
             int basePositionY = 8;                                                  // position verticale de base du bloc d'invaders    default : 8
@@ -128,8 +126,8 @@ namespace SpicyInvader.presenters
                 {
                     // Create new Crab (Invader object)
                     Crab crab = new Crab();
-                    crab.SetX(basePositionX + (SPACE_BETWEEN_INVADER * y));
-                    crab.SetY(basePositionY + (SPACE_BETWEEN_INVADER * x));
+                    crab.SetX(basePositionX + (Engine.SPACE_BETWEEN_INVADER * y));
+                    crab.SetY(basePositionY + (Engine.SPACE_BETWEEN_INVADER * x));
                     crab.Row = x + 1;
                     crab.Column = y + 1;
                     Model.Invaders.Add(crab);
