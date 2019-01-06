@@ -74,7 +74,7 @@
     <Compile Include="views\AboutView.cs" />
     <Compile Include="views\Char.cs" />
     <Compile Include="views\configs\LifecycleState.cs" />
-    <Compile Include="views\GameOverView.cs" />
+    <Compile Include="views\GameFinish.cs" />
     <Compile Include="views\HighscoresView.cs" />
     <Compile Include="views\MenuView.cs" />
     <Compile Include="views\configs\Screen.cs" />

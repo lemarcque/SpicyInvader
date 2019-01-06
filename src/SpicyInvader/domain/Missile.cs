@@ -22,7 +22,7 @@ namespace SpicyInvaders
         public Missile(Character owner)
         {
             this.owner = owner;
-            Color = ConsoleColor.Cyan;
+            Color = ConsoleColor.Red;
             Drawing = "*";
         }
 

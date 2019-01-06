@@ -15,7 +15,7 @@ namespace SpicyInvaders.domain.character
     {
         public Squid()
         {
-            Color = (ConsoleColor.White);
+            Color = (ConsoleColor.DarkRed);
             scoreGain = 10;
         }
     }

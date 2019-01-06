@@ -24,7 +24,7 @@ namespace SpicyInvader.domain
         public const short SPACE_BETWEEN_INVADER = 3;                          // the space that is between the ennemies displayed
         private const short LIMIT_MISSILE_DESTROY = 0;                          // The limit where a missile can still be drawed on screen
 
-        private const int SHOOTING_RANGE = 10;                           // The field of view of the invader to make a shoot
+        private const int SHOOTING_RANGE = 5;                           // The field of view of the invader to make a shoot
         private const int INTERVAL_INVADER_MISSILE_SHOOT = 1000; // default : 3000
 
         // Variable
@@ -83,7 +83,7 @@ namespace SpicyInvader.domain
                 Model.Ship.Shoot(true);
 
                 // creation of a timer for generating missile from invaders
-                timerShipMissile = new System.Timers.Timer(75);
+                timerShipMissile = new System.Timers.Timer(90);
                 timerShipMissile.Elapsed += new ElapsedEventHandler(OnMoveShipMissile);
                 timerShipMissile.Start();
             }
@@ -114,7 +114,7 @@ namespace SpicyInvader.domain
                 if(Model.Ship.GetMissile().isMoving)
                 {
                     // Collision management
-                    DisplayableObject[] invaderAlive = this.getInvadersAlive().ToArray();
+                    DisplayableObject[] invaderAlive = this.getInvadersAlive();
                     Invader invader = (Invader) CollisionObjectsHitBox(missile, invaderAlive);
                     if (invader != null)
                     {
@@ -187,14 +187,14 @@ namespace SpicyInvader.domain
             }
             else
             {
-                // on descend en bas
+                // go down
                 if (!isInvaderTransitioning)
                 {
                     isInvaderTransitioning = true;
                     currentMoveSens = (currentMoveSens == Direction.Right) ? Direction.Left : Direction.Right;
                     sens = Direction.Down;
                 }
-                // On continue dans l'autre sens
+                // go to the opposite sens
                 else
                 {
                     isInvaderTransitioning = false;
@@ -202,7 +202,7 @@ namespace SpicyInvader.domain
                 }
             }
 
-            // Affecting the new position of invaders -----------------------------------------------------------
+            // Affecting the new position of invaders
             foreach (Invader invader in Model.Invaders)
             {
                 if (invader.IsAlive)
@@ -212,7 +212,6 @@ namespace SpicyInvader.domain
                         Model.Lives = 0;
                         shootListener.UpdateMenu();
                         shootListener.GameOver();
-
                     }
                     else
                     {
@@ -227,6 +226,12 @@ namespace SpicyInvader.domain
                     }
                 }
             }
+
+            // Verify that there is still Invader(s) alive
+            if(getInvadersAlive().Length == 0)
+            {
+                shootListener.GameWin();
+            }
         }
 
         private void onMoveInvadersMissile()
@@ -234,10 +239,13 @@ namespace SpicyInvader.domain
             System.Timers.Timer timer = new System.Timers.Timer(75);
             timer.Elapsed += new ElapsedEventHandler((object source, ElapsedEventArgs e) => {
                 Missile missile = Model.CurrentInvaderMissileOwner.GetMissile();
-                if(missile.Y + 1 < Program.Height && !gameOver)
+
+                // Remove the missile from screen
+                shootListener.TempRemoveMissile();
+
+                if (missile.Y + 1 < Program.Height && !gameOver)
                 {
-                    // Remove the missile from screen
-                    shootListener.TempRemoveMissile();
+                    
 
                     // Move the missile
                     missile.Move(Direction.Down);
@@ -343,7 +351,7 @@ namespace SpicyInvader.domain
         /// Return a List of Invaders still alive.
         /// </summary>
         /// <returns></returns>
-        public List<Invader> getInvadersAlive()
+        public Invader[] getInvadersAlive()
         {
             List<Invader> invaders = new List<Invader>();
 
@@ -355,7 +363,7 @@ namespace SpicyInvader.domain
                 }
             }
 
-            return invaders;
+            return invaders.ToArray();
         }
     }
 }

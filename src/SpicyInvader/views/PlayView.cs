@@ -92,6 +92,12 @@ namespace SpicyInvader.views
                                         Presenter.ShipShooting();
                                         break;
 
+                                        // Debug
+                                    case ConsoleKey.D:
+                                        Console.Clear();
+                                        UpdateMenu();
+                                        break;
+
                                     case ConsoleKey.Escape:
                                         Program.Finish(this);
                                         break;
@@ -256,7 +262,15 @@ namespace SpicyInvader.views
         /// </summary>
         public void OnGameOver()
         {
-            Program.Navigate(new GameOverView());
+            Program.Navigate(new GameFinish("Game Over"));
+        }
+
+        /// <summary>
+        /// Called when the game is finished.
+        /// </summary>
+        public void OnGameWin()
+        {
+            Program.Navigate(new GameFinish("Bravo ! You win !"));
         }
     }
 }

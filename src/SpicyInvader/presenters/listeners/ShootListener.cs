@@ -28,5 +28,7 @@ namespace SpicyInvader.presenters.listeners
         void OnInvaderKilled(Invader invader);
 
         void GameOver();
+
+        void GameWin();
     }
 }

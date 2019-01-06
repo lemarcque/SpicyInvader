@@ -218,5 +218,14 @@ namespace SpicyInvader.presenters
             engine.Stop();
             View.OnGameOver();
         }
+
+        /// <summary>
+        /// Called when the player has won the game
+        /// </summary>
+        public void GameWin()
+        {
+            engine.Stop();
+            View.OnGameWin();
+        }
     }
 }
